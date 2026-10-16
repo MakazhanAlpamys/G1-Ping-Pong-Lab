@@ -1,0 +1,30 @@
+{
+  "verified": true,
+  "accepted_returns": 2,
+  "full_seconds": 15.0,
+  "physics_substeps": 60000,
+  "frames": 750,
+  "continuous_robot_and_wbc_history": true,
+  "ball_replaced_once_at_seconds": 3.0,
+  "feeder_frame": "fixed world frame",
+  "all_frame_previous_raw29_history_matches": true,
+  "no_fall_support_nonfoot_ground": true,
+  "maximum_native_force_cap_ratio": 1.0,
+  "source_sha256": "c3fc0de4ae0c8daa99f52b84e98424279d72909abfc4a76bbbc69ff241159ecb",
+  "trajectory_sha256": "c6ad2b5d8fc276566de627c8da29e21a38ed9e6048384e947c8ed0e6c5cf586b",
+  "report_sha256": "7dcdfe0b13e7b221372d9a466ea4c33ff1087d47b2b6a993870eb3cfaf1bac55",
+  "negative_probes_preserved": {
+    "continuous-feeds-probe3": {
+      "returns": 2,
+      "source_matches_snapshot": true
+    },
+    "continuous-feeds-probe4": {
+      "returns": 2,
+      "source_matches_snapshot": true
+    },
+    "continuous-feeds-probe-relative": {
+      "returns": 1,
+      "source_matches_snapshot": true
+    }
+  }
+}

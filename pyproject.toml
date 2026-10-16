@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "g1-ping-pong-lab"
+version = "0.1.0"
+description = "A reproducible Unitree G1 table-tennis simulation demo"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+authors = [{name = "G1 Ping Pong Lab contributors"}]
+dependencies = [
+  "mujoco==3.11.0",
+  "numpy==2.5.4",
+  "onnxruntime==1.31.0",
+  "PyYAML==6.0.3",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10"]
+render = ["Pillow>=11,<13"]
+
+[project.urls]
+Repository = "https://github.com/MakazhanAlpamys/G1-Ping-Pong-Lab"
+Documentation = "https://github.com/MakazhanAlpamys/G1-Ping-Pong-Lab/tree/main/docs"
+
+[project.scripts]
+g1-ping-pong = "g1_ping_pong_lab.runtime:main"
+g1-ping-pong-replay = "g1_ping_pong_lab.replay:main"
+g1-ping-pong-continuous = "g1_ping_pong_lab.continuous_feeds:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

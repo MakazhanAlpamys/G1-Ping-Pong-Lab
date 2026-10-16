@@ -1,0 +1,274 @@
+{
+  "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+  "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+  "feeds": [
+    {
+      "feed_id": 0,
+      "launched_at": 0.0,
+      "ball_outcome": {
+        "contacted": true,
+        "success": true,
+        "fallen": false,
+        "reason": "valid_return",
+        "own_bounce": true,
+        "net_clearance": true,
+        "first_landing": [
+          0.6670471589856994,
+          -0.22742578526821078,
+          0.7794899966849057
+        ],
+        "finished": true,
+        "trace": [
+          {
+            "time": 0.2689999999999981,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 0.48899999999997384,
+            "event": "racket_contact",
+            "position": [
+              -1.4715846327815192,
+              -0.24999114177152781,
+              0.8534570357978676
+            ]
+          },
+          {
+            "time": 0.7674999999999432,
+            "event": "net_clearance",
+            "position": [
+              0.0,
+              -0.23446186110277664,
+              0.9737897346703924
+            ]
+          },
+          {
+            "time": 0.8932499999999294,
+            "event": "far_bounce",
+            "position": [
+              0.6670471589856994,
+              -0.22742578526821078,
+              0.7794899966849057
+            ]
+          },
+          {
+            "time": 2.999999999999697,
+            "event": "finished",
+            "position": [
+              9.411797626954895,
+              -0.3148492305751269,
+              0.019965394488971795
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "feed_id": 1,
+      "launched_at": 3.0,
+      "ball_outcome": {
+        "contacted": true,
+        "success": true,
+        "fallen": false,
+        "reason": "valid_return",
+        "own_bounce": true,
+        "net_clearance": true,
+        "first_landing": [
+          0.703692366037966,
+          -0.3594297454182136,
+          0.7791264669629839
+        ],
+        "finished": true,
+        "trace": [
+          {
+            "time": 3.268999999999548,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 3.4919999999994245,
+            "event": "racket_contact",
+            "position": [
+              -1.4761325296752639,
+              -0.2500013311444074,
+              0.851223881173408
+            ]
+          },
+          {
+            "time": 3.764999999999273,
+            "event": "net_clearance",
+            "position": [
+              0.0,
+              -0.3241195780738385,
+              0.9753705915437237
+            ]
+          },
+          {
+            "time": 3.8944999999992014,
+            "event": "far_bounce",
+            "position": [
+              0.703692366037966,
+              -0.3594297454182136,
+              0.7791264669629839
+            ]
+          },
+          {
+            "time": 6.000000000001587,
+            "event": "finished",
+            "position": [
+              9.515680646705972,
+              -0.9781548345207646,
+              0.019965394489045513
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "feed_id": 2,
+      "launched_at": 6.0,
+      "ball_outcome": {
+        "contacted": true,
+        "success": false,
+        "fallen": false,
+        "reason": "floor_contact",
+        "own_bounce": true,
+        "net_clearance": false,
+        "first_landing": null,
+        "finished": true,
+        "trace": [
+          {
+            "time": 6.269000000001916,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 6.494750000002192,
+            "event": "racket_contact",
+            "position": [
+              -1.4804283498765816,
+              -0.24998665572906,
+              0.8490228767197285
+            ]
+          },
+          {
+            "time": 6.827000000002598,
+            "event": "floor_contact",
+            "position": [
+              -1.2855783078588825,
+              -0.1469835902176767,
+              0.01853143110574342
+            ]
+          },
+          {
+            "time": 9.0000000000017,
+            "event": "finished",
+            "position": [
+              0.511676294966892,
+              0.4973999952334047,
+              0.019965394489403224
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "feed_id": 3,
+      "launched_at": 9.0,
+      "ball_outcome": {
+        "contacted": false,
+        "success": false,
+        "fallen": false,
+        "reason": "floor_contact",
+        "own_bounce": true,
+        "net_clearance": false,
+        "first_landing": null,
+        "finished": true,
+        "trace": [
+          {
+            "time": 9.269000000001073,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 9.833499999999757,
+            "event": "floor_contact",
+            "position": [
+              -2.0000222598042274,
+              -0.25,
+              0.01828516211050131
+            ]
+          },
+          {
+            "time": 21.00000000000926,
+            "event": "finished",
+            "position": [
+              -15.35747658928088,
+              -0.25,
+              0.019965394489607775
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "feed_boundaries": [
+    {
+      "feed_id": 0,
+      "time": 0.0,
+      "robot_qpos_change_at_feed": 0.0,
+      "wbc_history_change_at_feed": 0.0
+    },
+    {
+      "feed_id": 1,
+      "time": 3.0,
+      "robot_qpos_change_at_feed": 0.0,
+      "wbc_history_change_at_feed": 0.0
+    },
+    {
+      "feed_id": 2,
+      "time": 6.0,
+      "robot_qpos_change_at_feed": 0.0,
+      "wbc_history_change_at_feed": 0.0
+    },
+    {
+      "feed_id": 3,
+      "time": 9.0,
+      "robot_qpos_change_at_feed": 0.0,
+      "wbc_history_change_at_feed": 0.0
+    }
+  ],
+  "feed_interval_seconds": 3.0,
+  "requested_seconds": 21.0,
+  "actual_seconds": 21.00000000000926,
+  "physics_substeps": 84000,
+  "robot_resets_after_start": 0,
+  "wbc_history_resets_after_start": 0,
+  "ball_replacements_after_start": 3,
+  "fallen": false,
+  "external_support_substeps": 0,
+  "nonfoot_ground_substeps": 0,
+  "maximum_force_cap_ratio": 1.0,
+  "failure": null,
+  "full_session_stance_accepted": true,
+  "accepted_returns": 2,
+  "scene_sha256": "4f2ce3a8cf64fcafec8601b3a001135f29b804928cb397e636dbe4479a3d902f",
+  "source_sha256": "572fa0cf31bd4ccf0384539155b7976f473a977b4c132af366a930882237e3f7",
+  "trajectory_sha256": "27c73a2c22150f1e36cc3913ded844f9b7d0b7178ace5601b08f21531d90a763"
+}

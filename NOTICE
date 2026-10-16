@@ -1,0 +1,29 @@
+G1 Ping Pong Lab
+Copyright 2026 G1 Ping Pong Lab contributors
+
+Project code, documentation, stroke parameters and original demonstration
+recordings are distributed under the Apache License, Version 2.0, except for
+third-party material identified in THIRD_PARTY_NOTICES.md.
+
+This project uses the frozen whole-body controller and configuration published
+by the wbc-mjlab/wbc-g1-deploy contributors, commit
+6dabf86fddc2b7b429b09e74999732fcde3441f9, under Apache-2.0.
+The upstream license and NOTICE are reproduced in licenses/WBC-LICENSE.txt
+and licenses/WBC-NOTICE.txt; the latter is also in assets/wbc/NOTICE.
+The supplied controller weights are unchanged. The Python inference adapter
+and reference trajectory implementation are specific to this project.
+
+The robot description is adapted from mjlab 1.6.0, commit
+0fb8a681136be94ffc636a3dd423cabb97d91f10.
+Copyright 2025, The mjlab Developers. Apache-2.0.
+The exported scene adds the table, net, paddle and ball, adjusts the initial
+stance and control configuration, and omits the research rebound wall.
+
+The G1 robot geometry is from Unitree Robotics, supplied through mjlab.
+Copyright (c) 2016-2022 HangZhou YuShu TECHNOLOGY CO.,LTD.
+("Unitree Robotics"). All rights reserved. BSD-3-Clause.
+The complete copyright, redistribution conditions and disclaimer are retained
+in licenses/Unitree-BSD-3-Clause.txt. The 35 mesh files are unmodified.
+
+Unitree and G1 names identify the simulated robot. This independent project
+does not imply endorsement by Unitree Robotics or by the controller authors.

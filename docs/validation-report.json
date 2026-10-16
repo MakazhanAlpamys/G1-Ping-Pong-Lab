@@ -1,0 +1,704 @@
+{
+  "protocol": "g1-ping-pong-lab.native-cpu-independent-serves-v1",
+  "description": "Identical fixed feeds. Each independent serve resets the entire trial and WBC history. No continuous rally.",
+  "controller": "CEM-optimized seven-arm-reference script over frozen Apache-2.0 132/29 WBC",
+  "physics_dt": 0.00025,
+  "control_hz": 50,
+  "trial_seconds": 12.0,
+  "serves": 8,
+  "accepted_returns": 8,
+  "trials": [
+    {
+      "trial_id": 0,
+      "ball_outcome": {
+        "contacted": true,
+        "success": true,
+        "fallen": false,
+        "reason": "valid_return",
+        "own_bounce": true,
+        "net_clearance": true,
+        "first_landing": [
+          0.6670471589856994,
+          -0.22742578526821078,
+          0.7794899966849057
+        ],
+        "finished": true,
+        "trace": [
+          {
+            "time": 0.2689999999999981,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 0.48899999999997384,
+            "event": "racket_contact",
+            "position": [
+              -1.4715846327815192,
+              -0.24999114177152781,
+              0.8534570357978676
+            ]
+          },
+          {
+            "time": 0.7674999999999432,
+            "event": "net_clearance",
+            "position": [
+              0.0,
+              -0.23446186110277664,
+              0.9737897346703924
+            ]
+          },
+          {
+            "time": 0.8932499999999294,
+            "event": "far_bounce",
+            "position": [
+              0.6670471589856994,
+              -0.22742578526821078,
+              0.7794899966849057
+            ]
+          },
+          {
+            "time": 11.999999999994708,
+            "event": "finished",
+            "position": [
+              44.58257527196087,
+              -1.0346930429026417,
+              0.019965394488971795
+            ]
+          }
+        ]
+      },
+      "accepted_return": true,
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "external_support": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "midtrial_resets": 0,
+      "postlaunch_ball_writes": 0,
+      "failure": null,
+      "serve_position": [
+        -0.65,
+        -0.25,
+        1.0
+      ],
+      "serve_velocity": [
+        -1.8,
+        0.0,
+        0.5
+      ]
+    },
+    {
+      "trial_id": 1,
+      "ball_outcome": {
+        "contacted": true,
+        "success": true,
+        "fallen": false,
+        "reason": "valid_return",
+        "own_bounce": true,
+        "net_clearance": true,
+        "first_landing": [
+          0.6670471589856994,
+          -0.22742578526821078,
+          0.7794899966849057
+        ],
+        "finished": true,
+        "trace": [
+          {
+            "time": 0.2689999999999981,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 0.48899999999997384,
+            "event": "racket_contact",
+            "position": [
+              -1.4715846327815192,
+              -0.24999114177152781,
+              0.8534570357978676
+            ]
+          },
+          {
+            "time": 0.7674999999999432,
+            "event": "net_clearance",
+            "position": [
+              0.0,
+              -0.23446186110277664,
+              0.9737897346703924
+            ]
+          },
+          {
+            "time": 0.8932499999999294,
+            "event": "far_bounce",
+            "position": [
+              0.6670471589856994,
+              -0.22742578526821078,
+              0.7794899966849057
+            ]
+          },
+          {
+            "time": 11.999999999994708,
+            "event": "finished",
+            "position": [
+              44.58257527196087,
+              -1.0346930429026417,
+              0.019965394488971795
+            ]
+          }
+        ]
+      },
+      "accepted_return": true,
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "external_support": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "midtrial_resets": 0,
+      "postlaunch_ball_writes": 0,
+      "failure": null,
+      "serve_position": [
+        -0.65,
+        -0.25,
+        1.0
+      ],
+      "serve_velocity": [
+        -1.8,
+        0.0,
+        0.5
+      ]
+    },
+    {
+      "trial_id": 2,
+      "ball_outcome": {
+        "contacted": true,
+        "success": true,
+        "fallen": false,
+        "reason": "valid_return",
+        "own_bounce": true,
+        "net_clearance": true,
+        "first_landing": [
+          0.6670471589856994,
+          -0.22742578526821078,
+          0.7794899966849057
+        ],
+        "finished": true,
+        "trace": [
+          {
+            "time": 0.2689999999999981,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 0.48899999999997384,
+            "event": "racket_contact",
+            "position": [
+              -1.4715846327815192,
+              -0.24999114177152781,
+              0.8534570357978676
+            ]
+          },
+          {
+            "time": 0.7674999999999432,
+            "event": "net_clearance",
+            "position": [
+              0.0,
+              -0.23446186110277664,
+              0.9737897346703924
+            ]
+          },
+          {
+            "time": 0.8932499999999294,
+            "event": "far_bounce",
+            "position": [
+              0.6670471589856994,
+              -0.22742578526821078,
+              0.7794899966849057
+            ]
+          },
+          {
+            "time": 11.999999999994708,
+            "event": "finished",
+            "position": [
+              44.58257527196087,
+              -1.0346930429026417,
+              0.019965394488971795
+            ]
+          }
+        ]
+      },
+      "accepted_return": true,
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "external_support": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "midtrial_resets": 0,
+      "postlaunch_ball_writes": 0,
+      "failure": null,
+      "serve_position": [
+        -0.65,
+        -0.25,
+        1.0
+      ],
+      "serve_velocity": [
+        -1.8,
+        0.0,
+        0.5
+      ]
+    },
+    {
+      "trial_id": 3,
+      "ball_outcome": {
+        "contacted": true,
+        "success": true,
+        "fallen": false,
+        "reason": "valid_return",
+        "own_bounce": true,
+        "net_clearance": true,
+        "first_landing": [
+          0.6670471589856994,
+          -0.22742578526821078,
+          0.7794899966849057
+        ],
+        "finished": true,
+        "trace": [
+          {
+            "time": 0.2689999999999981,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 0.48899999999997384,
+            "event": "racket_contact",
+            "position": [
+              -1.4715846327815192,
+              -0.24999114177152781,
+              0.8534570357978676
+            ]
+          },
+          {
+            "time": 0.7674999999999432,
+            "event": "net_clearance",
+            "position": [
+              0.0,
+              -0.23446186110277664,
+              0.9737897346703924
+            ]
+          },
+          {
+            "time": 0.8932499999999294,
+            "event": "far_bounce",
+            "position": [
+              0.6670471589856994,
+              -0.22742578526821078,
+              0.7794899966849057
+            ]
+          },
+          {
+            "time": 11.999999999994708,
+            "event": "finished",
+            "position": [
+              44.58257527196087,
+              -1.0346930429026417,
+              0.019965394488971795
+            ]
+          }
+        ]
+      },
+      "accepted_return": true,
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "external_support": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "midtrial_resets": 0,
+      "postlaunch_ball_writes": 0,
+      "failure": null,
+      "serve_position": [
+        -0.65,
+        -0.25,
+        1.0
+      ],
+      "serve_velocity": [
+        -1.8,
+        0.0,
+        0.5
+      ]
+    },
+    {
+      "trial_id": 4,
+      "ball_outcome": {
+        "contacted": true,
+        "success": true,
+        "fallen": false,
+        "reason": "valid_return",
+        "own_bounce": true,
+        "net_clearance": true,
+        "first_landing": [
+          0.6670471589856994,
+          -0.22742578526821078,
+          0.7794899966849057
+        ],
+        "finished": true,
+        "trace": [
+          {
+            "time": 0.2689999999999981,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 0.48899999999997384,
+            "event": "racket_contact",
+            "position": [
+              -1.4715846327815192,
+              -0.24999114177152781,
+              0.8534570357978676
+            ]
+          },
+          {
+            "time": 0.7674999999999432,
+            "event": "net_clearance",
+            "position": [
+              0.0,
+              -0.23446186110277664,
+              0.9737897346703924
+            ]
+          },
+          {
+            "time": 0.8932499999999294,
+            "event": "far_bounce",
+            "position": [
+              0.6670471589856994,
+              -0.22742578526821078,
+              0.7794899966849057
+            ]
+          },
+          {
+            "time": 11.999999999994708,
+            "event": "finished",
+            "position": [
+              44.58257527196087,
+              -1.0346930429026417,
+              0.019965394488971795
+            ]
+          }
+        ]
+      },
+      "accepted_return": true,
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "external_support": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "midtrial_resets": 0,
+      "postlaunch_ball_writes": 0,
+      "failure": null,
+      "serve_position": [
+        -0.65,
+        -0.25,
+        1.0
+      ],
+      "serve_velocity": [
+        -1.8,
+        0.0,
+        0.5
+      ]
+    },
+    {
+      "trial_id": 5,
+      "ball_outcome": {
+        "contacted": true,
+        "success": true,
+        "fallen": false,
+        "reason": "valid_return",
+        "own_bounce": true,
+        "net_clearance": true,
+        "first_landing": [
+          0.6670471589856994,
+          -0.22742578526821078,
+          0.7794899966849057
+        ],
+        "finished": true,
+        "trace": [
+          {
+            "time": 0.2689999999999981,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 0.48899999999997384,
+            "event": "racket_contact",
+            "position": [
+              -1.4715846327815192,
+              -0.24999114177152781,
+              0.8534570357978676
+            ]
+          },
+          {
+            "time": 0.7674999999999432,
+            "event": "net_clearance",
+            "position": [
+              0.0,
+              -0.23446186110277664,
+              0.9737897346703924
+            ]
+          },
+          {
+            "time": 0.8932499999999294,
+            "event": "far_bounce",
+            "position": [
+              0.6670471589856994,
+              -0.22742578526821078,
+              0.7794899966849057
+            ]
+          },
+          {
+            "time": 11.999999999994708,
+            "event": "finished",
+            "position": [
+              44.58257527196087,
+              -1.0346930429026417,
+              0.019965394488971795
+            ]
+          }
+        ]
+      },
+      "accepted_return": true,
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "external_support": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "midtrial_resets": 0,
+      "postlaunch_ball_writes": 0,
+      "failure": null,
+      "serve_position": [
+        -0.65,
+        -0.25,
+        1.0
+      ],
+      "serve_velocity": [
+        -1.8,
+        0.0,
+        0.5
+      ]
+    },
+    {
+      "trial_id": 6,
+      "ball_outcome": {
+        "contacted": true,
+        "success": true,
+        "fallen": false,
+        "reason": "valid_return",
+        "own_bounce": true,
+        "net_clearance": true,
+        "first_landing": [
+          0.6670471589856994,
+          -0.22742578526821078,
+          0.7794899966849057
+        ],
+        "finished": true,
+        "trace": [
+          {
+            "time": 0.2689999999999981,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 0.48899999999997384,
+            "event": "racket_contact",
+            "position": [
+              -1.4715846327815192,
+              -0.24999114177152781,
+              0.8534570357978676
+            ]
+          },
+          {
+            "time": 0.7674999999999432,
+            "event": "net_clearance",
+            "position": [
+              0.0,
+              -0.23446186110277664,
+              0.9737897346703924
+            ]
+          },
+          {
+            "time": 0.8932499999999294,
+            "event": "far_bounce",
+            "position": [
+              0.6670471589856994,
+              -0.22742578526821078,
+              0.7794899966849057
+            ]
+          },
+          {
+            "time": 11.999999999994708,
+            "event": "finished",
+            "position": [
+              44.58257527196087,
+              -1.0346930429026417,
+              0.019965394488971795
+            ]
+          }
+        ]
+      },
+      "accepted_return": true,
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "external_support": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "midtrial_resets": 0,
+      "postlaunch_ball_writes": 0,
+      "failure": null,
+      "serve_position": [
+        -0.65,
+        -0.25,
+        1.0
+      ],
+      "serve_velocity": [
+        -1.8,
+        0.0,
+        0.5
+      ]
+    },
+    {
+      "trial_id": 7,
+      "ball_outcome": {
+        "contacted": true,
+        "success": true,
+        "fallen": false,
+        "reason": "valid_return",
+        "own_bounce": true,
+        "net_clearance": true,
+        "first_landing": [
+          0.6670471589856994,
+          -0.22742578526821078,
+          0.7794899966849057
+        ],
+        "finished": true,
+        "trace": [
+          {
+            "time": 0.2689999999999981,
+            "event": "own_bounce",
+            "position": [
+              -1.1341913447402736,
+              -0.25,
+              0.7793259863470621
+            ]
+          },
+          {
+            "time": 0.48899999999997384,
+            "event": "racket_contact",
+            "position": [
+              -1.4715846327815192,
+              -0.24999114177152781,
+              0.8534570357978676
+            ]
+          },
+          {
+            "time": 0.7674999999999432,
+            "event": "net_clearance",
+            "position": [
+              0.0,
+              -0.23446186110277664,
+              0.9737897346703924
+            ]
+          },
+          {
+            "time": 0.8932499999999294,
+            "event": "far_bounce",
+            "position": [
+              0.6670471589856994,
+              -0.22742578526821078,
+              0.7794899966849057
+            ]
+          },
+          {
+            "time": 11.999999999994708,
+            "event": "finished",
+            "position": [
+              44.58257527196087,
+              -1.0346930429026417,
+              0.019965394488971795
+            ]
+          }
+        ]
+      },
+      "accepted_return": true,
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "external_support": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "midtrial_resets": 0,
+      "postlaunch_ball_writes": 0,
+      "failure": null,
+      "serve_position": [
+        -0.65,
+        -0.25,
+        1.0
+      ],
+      "serve_velocity": [
+        -1.8,
+        0.0,
+        0.5
+      ]
+    }
+  ],
+  "elapsed_wall_seconds": 146.69475045900026,
+  "mujoco_version": "3.11.0",
+  "source_sha256": {
+    "runtime.py": "0cf28741fd01fba0c2ddfb9a13b6a78f1255065cd4316cc5b5fee8f5114e155a",
+    "scoring.py": "2cce8f8e1761aec14c09c0529a7cdc02110f15ad37fb6689131d524120fab4bb"
+  },
+  "scene_sha256": "4f2ce3a8cf64fcafec8601b3a001135f29b804928cb397e636dbe4479a3d902f",
+  "wbc_sha256": {
+    "policy.onnx": "63a444122d85d2868045e08ff51c3fe711edbabc2d8c96a1a241d4c59e98bb34",
+    "config.yaml": "a646687843846d417d24d6b2c9f3a4dc51343d149491f63478363f6e3112fb17"
+  },
+  "trajectory_sha256": "e30a34c2ebf6d8eb109eae49a1e5c632682bfde298edfc7532bd51e9c398c961"
+}

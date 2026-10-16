@@ -1,0 +1,21 @@
+{
+  "accepted_independent_returns": 8,
+  "total_physics_substeps": 384000,
+  "full_native_seconds": 96.0,
+  "all_no_fall_external_support_nonfoot_ground": true,
+  "maximum_force_cap_ratio": 1.0,
+  "all8identical_repeats": {
+    "qpos": true,
+    "qvel": true,
+    "ctrl": true,
+    "raw7": true,
+    "reference39": true,
+    "raw_wbc29": true,
+    "observation132": true
+  },
+  "description": "Fixed feed repeated deterministically; repetition is not held-out robustness or a continuous rally.",
+  "report_sha256": "e0749af532a6ee758b52b44749e55c08933162cee30d73f61c609abb2560faf9",
+  "trajectory_sha256": "e30a34c2ebf6d8eb109eae49a1e5c632682bfde298edfc7532bd51e9c398c961",
+  "source_hashes_verified": true,
+  "scene_hash_verified": true
+}

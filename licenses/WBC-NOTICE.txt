@@ -1,0 +1,10 @@
+This repository includes code adapted from Unitree Robotics
+(unitree_rl_mjlab deploy stack), Copyright (c) 2025 Unitree Robotics Co., Ltd.
+
+Files under include/, thirdparty/cnpy/, and portions of the FSM/isaaclab
+structure retain the original Unitree license headers where present.
+
+WBC-specific additions:
+  src/State_WbcTracking.cpp
+  include/State_WbcTracking.h
+  README.md
