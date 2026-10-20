@@ -13,6 +13,7 @@ import numpy as np
 
 from .runtime import Controller, FORCE_CAPS, stroke_at, sha
 from .scoring import ReturnAttempt, TableGeometry
+from .interception import PredictiveTimingInterceptor
 
 
 def relative_feed_state(initial_root, current_root):
@@ -32,12 +33,22 @@ def relative_feed_state(initial_root, current_root):
     return np.r_[xy,1.],np.r_[velocity,.5]
 
 
-def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relative_feeder=False):
+def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relative_feeder=False,
+                   controller_mode="scripted", custom_velocity=None):
     if not 1 <= feeds <= 32 or interval < 2. or tail < 1.2:
         raise ValueError("Use 1..32 feeds, interval >=2 seconds and tail >=1.2 seconds")
     for duration in (interval, tail):
         if not np.isfinite(duration) or abs(duration/.02-round(duration/.02)) > 1e-8:
             raise ValueError("Durations must be finite multiples of .02 seconds")
+    if custom_velocity is not None:
+        custom_velocity = np.asarray(custom_velocity, dtype=np.float64)
+        if custom_velocity.shape != (3,) or not np.isfinite(custom_velocity).all():
+            raise ValueError("custom_velocity must be three finite values")
+        if robot_relative_feeder:
+            raise ValueError("custom_velocity cannot be combined with robot_relative_feeder")
+    if controller_mode != "scripted" and robot_relative_feeder:
+        raise ValueError("predictive timing uses a fixed world-frame interception plane; "
+                         "it is not supported with robot_relative_feeder")
     model = mujoco.MjModel.from_xml_path(str(scene))
     if abs(model.opt.timestep-.00025) > 1e-12 or model.nmocap or model.neq:
         raise ValueError("Native .25 ms free robot and no mocap/equality required")
@@ -45,6 +56,7 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     data = mujoco.MjData(model)
     mujoco.mj_resetDataKeyframe(model, data, 0)  # Once for the entire session.
     mujoco.mj_forward(model, data)
+    interceptor = PredictiveTimingInterceptor(model, controller, mode=controller_mode) if controller_mode != "scripted" else None
     initial_root=data.qpos[:7].copy()
     base_reference = controller.reference(data)
     ball_q = int(model.joint("ball/ball_freejoint").qposadr[0])
@@ -76,12 +88,19 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
                 reports.append({"feed_id":feed_id,"launched_at":feed_started,"ball_outcome":scorer.finish()})
             feed_id+=1;feed_started=step*model.opt.timestep
             before=data.qpos[:ball_q].copy();history_before=controller.previous.copy()
-            position,velocity=(relative_feed_state(initial_root,data.qpos[:7]) if robot_relative_feeder
-                               else (np.array([-.65,-.25,1.]),np.array([-1.8,0.,.5])))
+            if robot_relative_feeder:
+                position, velocity = relative_feed_state(initial_root, data.qpos[:7])
+            elif custom_velocity is not None:
+                position = np.array([-.65, -.25, 1.])
+                velocity = custom_velocity
+            else:
+                position, velocity = np.array([-.65, -.25, 1.]), np.array([-1.8, 0., .5])
             data.qpos[ball_q:ball_q+7]=np.r_[position,1.,0.,0.,0.]
             data.qvel[ball_v:ball_v+6]=np.r_[velocity,0.,0.,0.]
             data.qacc_warmstart[ball_v:ball_v+6]=0.
             mujoco.mj_forward(model,data)
+            if interceptor is not None:
+                interceptor.reset_feed(feed_id, data)
             boundaries.append({"feed_id":feed_id,"time":feed_started,
                 "launch_position":position.tolist(),"launch_velocity":velocity.tolist(),
                 "robot_qpos_change_at_feed":float(np.max(abs(data.qpos[:ball_q]-before))),
@@ -89,7 +108,8 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
             scorer=ReturnAttempt(geometry)
         if step%80==0:
             relative=max(0.,data.time-feed_started)
-            ref=base_reference.copy();raw7=stroke_at(relative)
+            ref=base_reference.copy()
+            raw7=interceptor.step(data, relative) if interceptor is not None else stroke_at(relative)
             ref[10+controller.arm]+=.7*raw7
             ref[10:]=np.clip(ref[10:],controller.ranges[:,0],controller.ranges[:,1])
             raw29,obs=controller.apply(data,ref)
@@ -123,6 +143,7 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     accepted=bool(not fallen_any and not support_steps and not nonfoot_steps and cap_ratio<=1.000001 and failure is None and step+1==nsteps)
     report={"protocol":"g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
         "description":"One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+        "controller_mode":controller_mode,
         "feeds":reports,"feed_boundaries":boundaries,"feed_interval_seconds":interval,
         "feeder_frame":"current simulator pelvis XY/yaw (oracle pose)" if robot_relative_feeder else "fixed world frame",
         "requested_seconds":(feeds-1)*interval+tail,"actual_seconds":float(data.time),"physics_substeps":step+1,
@@ -142,9 +163,12 @@ def main():
     parser.add_argument('--tail',type=float,default=12.)
     parser.add_argument('--output',type=Path,default=Path('outputs/continuous-feeds'))
     parser.add_argument('--robot-relative-feeder',action='store_true',help='Aim new feeds in current simulator pelvis XY/yaw frame; no postlaunch edits')
+    parser.add_argument('--controller',choices=['scripted','predictive-timing'],default='scripted',help='Arm trajectory controller strategy (default: scripted)')
+    parser.add_argument('--velocity',nargs=3,type=float,default=None,help='Custom feed velocity [vx, vy, vz] for perturbation testing')
     args=parser.parse_args();args.output.mkdir(parents=True,exist_ok=False)
     report,frames=run_continuous(args.scene,args.wbc,feeds=args.feeds,interval=args.interval,tail=args.tail,
-                               robot_relative_feeder=args.robot_relative_feeder)
+                               robot_relative_feeder=args.robot_relative_feeder,
+                               controller_mode=args.controller,custom_velocity=args.velocity)
     np.savez_compressed(args.output/'session.npz',**{k:np.array([f[k]for f in frames])for k in frames[0]})
     report.update(scene_sha256=sha(args.scene),source_sha256=sha(__file__),trajectory_sha256=sha(args.output/'session.npz'))
     (args.output/'report.json').write_text(json.dumps(report,indent=2)+'\n')

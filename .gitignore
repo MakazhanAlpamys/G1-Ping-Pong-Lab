@@ -42,3 +42,7 @@ Thumbs.db
 !/media/demo-preview.gif
 !/media/poster.png
 !/media/demo.render.json
+
+# Research and experiment notes
+research/
+RESEARCH/
