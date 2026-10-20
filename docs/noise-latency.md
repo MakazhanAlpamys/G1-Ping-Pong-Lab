@@ -172,3 +172,68 @@ records the hash of the input JSON and embeds each case's actual settings.
 `--profiles` can select a subset of either the built-in or supplied matrix.
 The largest backward phase step is now recorded directly per trial and group,
 in addition to the total count; feed clock resets do not count as reversals.
+
+## Sensitivity results on ten new seeds
+
+The [full sensitivity evidence](experiments/noise-latency-sensitivity.json) was
+generated from the prespecified matrix at runtime commit `0854a5d`. All 182
+trials completed their 12-second / 48,000-substep window. The source and matrix
+were fixed before execution; noisy trials use seeds 10 through 19.
+
+| Perturbation | Nominal, -1.8 m/s | Faster +10%, -1.98 m/s |
+| --- | --- | --- |
+| Position std 1 mm / axis | 10/10 | 10/10 |
+| Position std 5 mm / axis | 9/10 | 9/10 |
+| Position std 10 mm / axis | 7/10 | 7/10 |
+| Velocity std 0.01 m/s / axis | 10/10 | 10/10 |
+| Velocity std 0.05 m/s / axis | 6/10 | 9/10 |
+| Velocity std 0.1 m/s / axis | 1/10 | 7/10 |
+| Combined 5 mm + 0.05 m/s + 40 ms, age ignored | 0/10 | 0/10 |
+| Same combined condition, capture time used | 5/10 | 6/10 |
+
+Thus the combined capture-time result was **11/20**, compared with **0/20** when
+sample age was ignored. The earlier pilot's 6/6 should not be interpreted as
+reliable success across noise realizations: the disjoint seed set exposes
+substantial remaining sensitivity. Position-only and velocity-only rows have
+zero delivery delay and use the current clock. Their standard deviations refer
+to independent Gaussian errors, not bounds on actual camera accuracy.
+
+The following pure-delay controls have no measurement noise. Each cell is one
+deterministic run; a dash means that mode was not included in the matrix.
+
+| Delay | Nominal, age ignored | Nominal, capture time | Faster, age ignored | Faster, capture time |
+| --- | --- | --- | --- | --- |
+| 20 ms | 0/1 | 1/1 | 0/1 | 1/1 |
+| 40 ms | 0/1 | 1/1 | 0/1 | 1/1 |
+| 80 ms | 0/1 | 1/1 | 0/1 | 0/1 |
+| 120 ms | — | 1/1 | — | 0/1 |
+| 200 ms | — | 0/1 | — | 0/1 |
+| 300 ms | — | 0/1 | — | 0/1 |
+
+With capture time, the nominal feed succeeded at the tested delays through
+120 ms and failed at 200 and 300 ms. The faster feed succeeded at 20 and 40 ms,
+but failed at 80 ms and above. These are sampled outcomes for fixed feeds and
+the READY-until-first-measurement startup rule, not universal or monotonic
+latency thresholds. Compensating prediction time does not restore the arm's
+lost preparation history.
+
+The largest observed backward phase step was **76.53 ms** in a 0.1 m/s velocity
+noise trial. Both successful and unsuccessful returns can contain phase
+reversals, so return counts and phase behavior are reported separately. The
+original planner and gate remain unchanged; the benchmark retains this jitter
+as evidence for subsequent controller/filter comparisons.
+
+All 182 stance audits passed: zero falls, external support, non-foot ground
+contact or native force-cap excess; 8,736,000 physics substeps were checked.
+All four scripted/clean controls matched the previous pilot bitwise across
+their complete recorded state/control arrays. Verification checked 182 report
+hashes, 364 NPZ hashes, capture/delivery causality, every delivered seeded noisy
+measurement against its capture-time truth, and all saved WBC action histories.
+The associated code passed 79 tests, with 2 optional EGL skips and 16 passing
+subtests. Raw archives remain in `outputs/noise-latency-sensitivity/`.
+
+This study widens the synthetic test range but still has only ten noise seeds
+per condition and two fixed launch velocities. It makes no general robustness,
+continuous-rally or real-hardware claim. Future comparisons can reuse this
+matrix as a regression set; tuning against it should be followed by evaluation
+on fresh seeds and additional launch conditions.

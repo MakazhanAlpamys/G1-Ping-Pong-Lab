@@ -25,3 +25,8 @@ The [noise and latency benchmark](../noise-latency.md) and its
 [32-trial pilot evidence](noise-latency-pilot.json) use independent reset trials
 with synthetic sensing errors. They are separate from the continuous endurance
 probes above and do not establish longer rallies.
+
+The larger [prespecified sensitivity matrix](noise-latency-sensitivity-matrix.json)
+and [182-trial evidence](noise-latency-sensitivity.json) cover three position-noise
+levels, three velocity-noise levels and delays from 20 to 300 ms on ten new seeds.
+See the parent benchmark document for the separate per-speed results and limits.
