@@ -1,0 +1,4945 @@
+{
+  "protocol": "g1-ping-pong-lab.ball-observation-noise-latency-v1",
+  "created_at": "2026-10-20T19:03:23.555711+00:00",
+  "seconds_per_trial": 12.0,
+  "assumptions": [
+    "Independent reset trials with fixed feeds and three-dimensional Gaussian noise.",
+    "Ball measurements captured at 50 Hz; delivery ages are quantized to control ticks.",
+    "Only predictor inputs are perturbed; WBC uses exact simulator state.",
+    "Startup holds READY until the first delayed measurement arrives.",
+    "Timestamp-aware mode uses capture time; it adds no filtering or future state.",
+    "Small synthetic-noise pilot; no camera model, hardware validation or endurance claim."
+  ],
+  "provenance": {
+    "git_revision": "18717dbcefdaaf6baf2c38ff1488efbb78a6e363",
+    "source_sha256": {
+      "src/g1_ping_pong_lab/__init__.py": "18235403500a0cb264f2d37f2ac149eb95966313c3df03d91e598ab144f390f6",
+      "src/g1_ping_pong_lab/ball_observations.py": "279dfcd71604b3b5c04772cfbb532313e159c8dad14d5ab303a159a43094118f",
+      "src/g1_ping_pong_lab/continuous_feeds.py": "7993bb2aecf58225c0a969c3cd2f13e2ec64540c79376d693f872bd961b283ee",
+      "src/g1_ping_pong_lab/interception/__init__.py": "0406093b57037045c422c0ec3229f7c5b918026ae6598cc2fb7095baff1a0f38",
+      "src/g1_ping_pong_lab/interception/controller.py": "d0321fb6a1a61b8d0263391f99aa34e3e5c24d98c05ddd04291017cdbd203707",
+      "src/g1_ping_pong_lab/interception/planner.py": "f1415f39ef6f3dd1a0858a7226f6d44092ca38833e73c57116ae8f264009b730",
+      "src/g1_ping_pong_lab/interception/predictor.py": "225baf6b22e620654c50a7be0b20ee037bec208102e8c3b1531644776c908d0a",
+      "src/g1_ping_pong_lab/observation_benchmark.py": "e98ae60e0af93067b5ce4d353713ae3100509646d72e211496292b8eecb257e7",
+      "src/g1_ping_pong_lab/observed_interception.py": "fac73d9fe19da274ae600947b2ad2b839c29f731585c29b58008046dee9b5f53",
+      "src/g1_ping_pong_lab/replay.py": "97738a0f20d782c16bd82ffe4a3771de86284d90c95f8288e5fc0a401af781a9",
+      "src/g1_ping_pong_lab/runtime.py": "0cf28741fd01fba0c2ddfb9a13b6a78f1255065cd4316cc5b5fee8f5114e155a",
+      "src/g1_ping_pong_lab/scoring.py": "2cce8f8e1761aec14c09c0529a7cdc02110f15ad37fb6689131d524120fab4bb"
+    },
+    "scene_sha256": "4f2ce3a8cf64fcafec8601b3a001135f29b804928cb397e636dbe4479a3d902f",
+    "wbc_sha256": {
+      "policy.onnx": "63a444122d85d2868045e08ff51c3fe711edbabc2d8c96a1a241d4c59e98bb34",
+      "config.yaml": "a646687843846d417d24d6b2c9f3a4dc51343d149491f63478363f6e3112fb17"
+    },
+    "environment": {
+      "python": "3.12.10",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "mujoco": "3.11.0",
+      "numpy": "2.5.4",
+      "onnxruntime": "1.31.0",
+      "pyyaml": "6.0.3"
+    }
+  },
+  "cases": [
+    {
+      "id": "v00-scripted-s0",
+      "profile": "scripted",
+      "vx": -1.8,
+      "seed": 0,
+      "controller_mode": "scripted",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.0,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-clean-s0",
+      "profile": "clean",
+      "vx": -1.8,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.0,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-position_5mm-s0",
+      "profile": "position_5mm",
+      "vx": -1.8,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.0,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-position_5mm-s1",
+      "profile": "position_5mm",
+      "vx": -1.8,
+      "seed": 1,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.0,
+        "seed": 1,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-position_5mm-s2",
+      "profile": "position_5mm",
+      "vx": -1.8,
+      "seed": 2,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.0,
+        "seed": 2,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-velocity_0p05-s0",
+      "profile": "velocity_0p05",
+      "vx": -1.8,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.0,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-velocity_0p05-s1",
+      "profile": "velocity_0p05",
+      "vx": -1.8,
+      "seed": 1,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.0,
+        "seed": 1,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-velocity_0p05-s2",
+      "profile": "velocity_0p05",
+      "vx": -1.8,
+      "seed": 2,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.0,
+        "seed": 2,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-delay_40ms-s0",
+      "profile": "delay_40ms",
+      "vx": -1.8,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.04,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-delay_40ms_timestamped-s0",
+      "profile": "delay_40ms_timestamped",
+      "vx": -1.8,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.04,
+        "seed": 0,
+        "timestamp_aware": true
+      }
+    },
+    {
+      "id": "v00-combined-s0",
+      "profile": "combined",
+      "vx": -1.8,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-combined-s1",
+      "profile": "combined",
+      "vx": -1.8,
+      "seed": 1,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 1,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-combined-s2",
+      "profile": "combined",
+      "vx": -1.8,
+      "seed": 2,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 2,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v00-combined_timestamped-s0",
+      "profile": "combined_timestamped",
+      "vx": -1.8,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 0,
+        "timestamp_aware": true
+      }
+    },
+    {
+      "id": "v00-combined_timestamped-s1",
+      "profile": "combined_timestamped",
+      "vx": -1.8,
+      "seed": 1,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 1,
+        "timestamp_aware": true
+      }
+    },
+    {
+      "id": "v00-combined_timestamped-s2",
+      "profile": "combined_timestamped",
+      "vx": -1.8,
+      "seed": 2,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 2,
+        "timestamp_aware": true
+      }
+    },
+    {
+      "id": "v01-scripted-s0",
+      "profile": "scripted",
+      "vx": -1.98,
+      "seed": 0,
+      "controller_mode": "scripted",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.0,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-clean-s0",
+      "profile": "clean",
+      "vx": -1.98,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.0,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-position_5mm-s0",
+      "profile": "position_5mm",
+      "vx": -1.98,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.0,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-position_5mm-s1",
+      "profile": "position_5mm",
+      "vx": -1.98,
+      "seed": 1,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.0,
+        "seed": 1,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-position_5mm-s2",
+      "profile": "position_5mm",
+      "vx": -1.98,
+      "seed": 2,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.0,
+        "seed": 2,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-velocity_0p05-s0",
+      "profile": "velocity_0p05",
+      "vx": -1.98,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.0,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-velocity_0p05-s1",
+      "profile": "velocity_0p05",
+      "vx": -1.98,
+      "seed": 1,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.0,
+        "seed": 1,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-velocity_0p05-s2",
+      "profile": "velocity_0p05",
+      "vx": -1.98,
+      "seed": 2,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.0,
+        "seed": 2,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-delay_40ms-s0",
+      "profile": "delay_40ms",
+      "vx": -1.98,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.04,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-delay_40ms_timestamped-s0",
+      "profile": "delay_40ms_timestamped",
+      "vx": -1.98,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.0,
+        "velocity_std_mps": 0.0,
+        "latency_s": 0.04,
+        "seed": 0,
+        "timestamp_aware": true
+      }
+    },
+    {
+      "id": "v01-combined-s0",
+      "profile": "combined",
+      "vx": -1.98,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 0,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-combined-s1",
+      "profile": "combined",
+      "vx": -1.98,
+      "seed": 1,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 1,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-combined-s2",
+      "profile": "combined",
+      "vx": -1.98,
+      "seed": 2,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 2,
+        "timestamp_aware": false
+      }
+    },
+    {
+      "id": "v01-combined_timestamped-s0",
+      "profile": "combined_timestamped",
+      "vx": -1.98,
+      "seed": 0,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 0,
+        "timestamp_aware": true
+      }
+    },
+    {
+      "id": "v01-combined_timestamped-s1",
+      "profile": "combined_timestamped",
+      "vx": -1.98,
+      "seed": 1,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 1,
+        "timestamp_aware": true
+      }
+    },
+    {
+      "id": "v01-combined_timestamped-s2",
+      "profile": "combined_timestamped",
+      "vx": -1.98,
+      "seed": 2,
+      "controller_mode": "predictive-timing",
+      "observation_config": {
+        "position_std_m": 0.005,
+        "velocity_std_mps": 0.05,
+        "latency_s": 0.04,
+        "seed": 2,
+        "timestamp_aware": true
+      }
+    }
+  ],
+  "trials": [
+    {
+      "id": "v00-clean-s0",
+      "profile": "clean",
+      "vx": -1.8,
+      "seed": 0,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v00-combined-s0",
+      "profile": "combined",
+      "vx": -1.8,
+      "seed": 0,
+      "accepted_returns": 0,
+      "reason": "wrong_first_landing",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 1,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v00-combined-s1",
+      "profile": "combined",
+      "vx": -1.8,
+      "seed": 1,
+      "accepted_returns": 0,
+      "reason": "wrong_first_landing",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 2,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v00-combined-s2",
+      "profile": "combined",
+      "vx": -1.8,
+      "seed": 2,
+      "accepted_returns": 0,
+      "reason": "wrong_first_landing",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 3,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v00-combined_timestamped-s0",
+      "profile": "combined_timestamped",
+      "vx": -1.8,
+      "seed": 0,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 1,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v00-combined_timestamped-s1",
+      "profile": "combined_timestamped",
+      "vx": -1.8,
+      "seed": 1,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 2,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v00-combined_timestamped-s2",
+      "profile": "combined_timestamped",
+      "vx": -1.8,
+      "seed": 2,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 3,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v00-delay_40ms-s0",
+      "profile": "delay_40ms",
+      "vx": -1.8,
+      "seed": 0,
+      "accepted_returns": 0,
+      "reason": "wrong_first_landing",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v00-delay_40ms_timestamped-s0",
+      "profile": "delay_40ms_timestamped",
+      "vx": -1.8,
+      "seed": 0,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v00-position_5mm-s0",
+      "profile": "position_5mm",
+      "vx": -1.8,
+      "seed": 0,
+      "accepted_returns": 0,
+      "reason": "net_contact",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v00-position_5mm-s1",
+      "profile": "position_5mm",
+      "vx": -1.8,
+      "seed": 1,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v00-position_5mm-s2",
+      "profile": "position_5mm",
+      "vx": -1.8,
+      "seed": 2,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v00-scripted-s0",
+      "profile": "scripted",
+      "vx": -1.8,
+      "seed": 0,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v00-velocity_0p05-s0",
+      "profile": "velocity_0p05",
+      "vx": -1.8,
+      "seed": 0,
+      "accepted_returns": 0,
+      "reason": "wrong_first_landing",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 1,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v00-velocity_0p05-s1",
+      "profile": "velocity_0p05",
+      "vx": -1.8,
+      "seed": 1,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 2,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v00-velocity_0p05-s2",
+      "profile": "velocity_0p05",
+      "vx": -1.8,
+      "seed": 2,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 2,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v01-clean-s0",
+      "profile": "clean",
+      "vx": -1.98,
+      "seed": 0,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v01-combined-s0",
+      "profile": "combined",
+      "vx": -1.98,
+      "seed": 0,
+      "accepted_returns": 0,
+      "reason": "wrong_first_landing",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 1,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v01-combined-s1",
+      "profile": "combined",
+      "vx": -1.98,
+      "seed": 1,
+      "accepted_returns": 0,
+      "reason": "wrong_first_landing",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 1,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v01-combined-s2",
+      "profile": "combined",
+      "vx": -1.98,
+      "seed": 2,
+      "accepted_returns": 0,
+      "reason": "wrong_first_landing",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 2,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v01-combined_timestamped-s0",
+      "profile": "combined_timestamped",
+      "vx": -1.98,
+      "seed": 0,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 1,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v01-combined_timestamped-s1",
+      "profile": "combined_timestamped",
+      "vx": -1.98,
+      "seed": 1,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 1,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v01-combined_timestamped-s2",
+      "profile": "combined_timestamped",
+      "vx": -1.98,
+      "seed": 2,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 2,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v01-delay_40ms-s0",
+      "profile": "delay_40ms",
+      "vx": -1.98,
+      "seed": 0,
+      "accepted_returns": 0,
+      "reason": "wrong_first_landing",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v01-delay_40ms_timestamped-s0",
+      "profile": "delay_40ms_timestamped",
+      "vx": -1.98,
+      "seed": 0,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.040000000000048885,
+      "ticks_without_measurement": 2
+    },
+    {
+      "id": "v01-position_5mm-s0",
+      "profile": "position_5mm",
+      "vx": -1.98,
+      "seed": 0,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v01-position_5mm-s1",
+      "profile": "position_5mm",
+      "vx": -1.98,
+      "seed": 1,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v01-position_5mm-s2",
+      "profile": "position_5mm",
+      "vx": -1.98,
+      "seed": 2,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v01-scripted-s0",
+      "profile": "scripted",
+      "vx": -1.98,
+      "seed": 0,
+      "accepted_returns": 0,
+      "reason": "wrong_first_landing",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 0,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v01-velocity_0p05-s0",
+      "profile": "velocity_0p05",
+      "vx": -1.98,
+      "seed": 0,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 1,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v01-velocity_0p05-s1",
+      "profile": "velocity_0p05",
+      "vx": -1.98,
+      "seed": 1,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 1,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    },
+    {
+      "id": "v01-velocity_0p05-s2",
+      "profile": "velocity_0p05",
+      "vx": -1.98,
+      "seed": 2,
+      "accepted_returns": 1,
+      "reason": "valid_return",
+      "stance_accepted": true,
+      "fallen": false,
+      "max_force_cap_ratio": 1.0,
+      "physics_substeps": 48000,
+      "phase_reversals": 2,
+      "maximum_age_seconds": 0.0,
+      "ticks_without_measurement": 0
+    }
+  ],
+  "groups": [
+    {
+      "vx": -1.98,
+      "profile": "clean",
+      "trials": 1,
+      "accepted_returns": 1,
+      "stance_accepted_trials": 1,
+      "phase_reversals": 0
+    },
+    {
+      "vx": -1.98,
+      "profile": "combined",
+      "trials": 3,
+      "accepted_returns": 0,
+      "stance_accepted_trials": 3,
+      "phase_reversals": 4
+    },
+    {
+      "vx": -1.98,
+      "profile": "combined_timestamped",
+      "trials": 3,
+      "accepted_returns": 3,
+      "stance_accepted_trials": 3,
+      "phase_reversals": 4
+    },
+    {
+      "vx": -1.98,
+      "profile": "delay_40ms",
+      "trials": 1,
+      "accepted_returns": 0,
+      "stance_accepted_trials": 1,
+      "phase_reversals": 0
+    },
+    {
+      "vx": -1.98,
+      "profile": "delay_40ms_timestamped",
+      "trials": 1,
+      "accepted_returns": 1,
+      "stance_accepted_trials": 1,
+      "phase_reversals": 0
+    },
+    {
+      "vx": -1.98,
+      "profile": "position_5mm",
+      "trials": 3,
+      "accepted_returns": 3,
+      "stance_accepted_trials": 3,
+      "phase_reversals": 0
+    },
+    {
+      "vx": -1.98,
+      "profile": "scripted",
+      "trials": 1,
+      "accepted_returns": 0,
+      "stance_accepted_trials": 1,
+      "phase_reversals": 0
+    },
+    {
+      "vx": -1.98,
+      "profile": "velocity_0p05",
+      "trials": 3,
+      "accepted_returns": 3,
+      "stance_accepted_trials": 3,
+      "phase_reversals": 4
+    },
+    {
+      "vx": -1.8,
+      "profile": "clean",
+      "trials": 1,
+      "accepted_returns": 1,
+      "stance_accepted_trials": 1,
+      "phase_reversals": 0
+    },
+    {
+      "vx": -1.8,
+      "profile": "combined",
+      "trials": 3,
+      "accepted_returns": 0,
+      "stance_accepted_trials": 3,
+      "phase_reversals": 6
+    },
+    {
+      "vx": -1.8,
+      "profile": "combined_timestamped",
+      "trials": 3,
+      "accepted_returns": 3,
+      "stance_accepted_trials": 3,
+      "phase_reversals": 6
+    },
+    {
+      "vx": -1.8,
+      "profile": "delay_40ms",
+      "trials": 1,
+      "accepted_returns": 0,
+      "stance_accepted_trials": 1,
+      "phase_reversals": 0
+    },
+    {
+      "vx": -1.8,
+      "profile": "delay_40ms_timestamped",
+      "trials": 1,
+      "accepted_returns": 1,
+      "stance_accepted_trials": 1,
+      "phase_reversals": 0
+    },
+    {
+      "vx": -1.8,
+      "profile": "position_5mm",
+      "trials": 3,
+      "accepted_returns": 2,
+      "stance_accepted_trials": 3,
+      "phase_reversals": 0
+    },
+    {
+      "vx": -1.8,
+      "profile": "scripted",
+      "trials": 1,
+      "accepted_returns": 1,
+      "stance_accepted_trials": 1,
+      "phase_reversals": 0
+    },
+    {
+      "vx": -1.8,
+      "profile": "velocity_0p05",
+      "trials": 3,
+      "accepted_returns": 2,
+      "stance_accepted_trials": 3,
+      "phase_reversals": 5
+    }
+  ],
+  "trial_report_sha256": {
+    "v00-clean-s0": "cbe74f8d7ab42f810a1133a29c100acffcc1452f91d853ce40fe59951c992f89",
+    "v00-combined-s0": "dcb7a69715e1e625e3cce8d2c91b31074fe639e84850389a6a05d6250388fe19",
+    "v00-combined-s1": "9e7af487a2a27f0b8098ef37f7c652e5d355f67cb0d8d6edbcc8108431bed3bd",
+    "v00-combined-s2": "d4635644272f86b41ee9c4560dbc97ff6508c92db26f7bbc1eccff10684d6b89",
+    "v00-combined_timestamped-s0": "b4611b6d68645654acfde5e836a0952340318a4269506f3f55b1ab163ce8c9d9",
+    "v00-combined_timestamped-s1": "6739df5cbf031b701271d8ecda93658efcceb466820ea5fd15e0a5997a5b852a",
+    "v00-combined_timestamped-s2": "c356afad96cbc5dd1d938fcc0c53499e8c1cc67c20839165c855c088afb95264",
+    "v00-delay_40ms-s0": "c71c2e24ad5fcb69eca0d5900b2ccb2ade5b5ab502408d61d8661b6a31c9d058",
+    "v00-delay_40ms_timestamped-s0": "d56493fcd8b85c2ef89ed3214e858d42ea004e0ee101a488dae2f1ad51c51818",
+    "v00-position_5mm-s0": "bd2b4daae69e5a1eb5474493397e7839d0c01bdf34b680ee78d46caa1d002d1d",
+    "v00-position_5mm-s1": "af3dc99004ba07792b1bb416005fdbcf242d09afd6c269b6438938407e2cab04",
+    "v00-position_5mm-s2": "2cd66a597f66dd99a579f8241aa61c3f0e74ace703045c76800bb8a7008e4686",
+    "v00-scripted-s0": "b6213f1c07491e6f2a3f5ffb8b39ff593262184232ebc8b9d99fabcc12420209",
+    "v00-velocity_0p05-s0": "e45a4fb019ac1db0f5b230564093a9a6d608047f249c8403b36e1f738bcd816b",
+    "v00-velocity_0p05-s1": "b989e9b9ae0d481e6770c9b638131bb3321dacd92ea02aa09e151b02a739f811",
+    "v00-velocity_0p05-s2": "c27121a1d5c402ef292fa7ece7a69ea67c7e3a8b16b97e5bf4bf0e9c63c2ed75",
+    "v01-clean-s0": "90a6abd6d4873e51fa1771b03505b140724b97567beae2c4a9fd0d1970819d03",
+    "v01-combined-s0": "1ad10daf144e2c150e8185a0f627b3941f2fc14707b5087a21636c1f59967b0c",
+    "v01-combined-s1": "23991655060032f20e08724c4fd35dd7cec8f2ded37a7257811b05223540475c",
+    "v01-combined-s2": "794b466bef7ccd61b0858e9ae7ae37712d4755af9558e973fc04341d035e3789",
+    "v01-combined_timestamped-s0": "88f5e0045b4b2cc55726424b44a54cbef997a80cc1021b9f817c3db0499df2eb",
+    "v01-combined_timestamped-s1": "9a76de8ef4a015ec96cf63126752229732123d87505897fcfd0e94d49f37c72e",
+    "v01-combined_timestamped-s2": "1ff5ab5fbb43037d74b22dd75dae986e9d83a97055e62972608c2a471703b3e0",
+    "v01-delay_40ms-s0": "0155894b0aab6b2d233a1fa75d98f797932e0a91b4b99b4b6dfe03569117af2b",
+    "v01-delay_40ms_timestamped-s0": "faea0566d410d8fa9424558c19039efce0c83ed084cfa04e90f031aa224d2b22",
+    "v01-position_5mm-s0": "04804002eb5214b437c4971703b2e4a30468fe47466bd4d9c330b5cfa56492b5",
+    "v01-position_5mm-s1": "1c0ece3e2cd6ebc06b0862ed1c448599182ab85fdfbe751af7eda45729342a94",
+    "v01-position_5mm-s2": "c5b42de84d85077b8cfefd12e9b1ae0c91888518475fbdb6c4b768e16ed3fda7",
+    "v01-scripted-s0": "08ef473694fe5ba2c9d848068cb3f00e762d88cd4f01399147ed704d32207644",
+    "v01-velocity_0p05-s0": "3adfa838c46aa7882deb897c1dda3b9cef73fc2cadea3bf7ea3a1759abef7c72",
+    "v01-velocity_0p05-s1": "d2edbacc2aab84399a09d8ef8f11f31e186a70df0cbbba0547a1a684457c1cc5",
+    "v01-velocity_0p05-s2": "180b157f9e1a47e55b1e03ec76c878b72940fb4803e3772ae18eb6632ef8bcaf"
+  },
+  "physical_reports": {
+    "v00-clean-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.6598237597865126,
+              -0.22736902190426062,
+              0.7793525529899905
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.48899999999997384,
+                "event": "racket_contact",
+                "position": [
+                  -1.471598923274755,
+                  -0.24999038140617233,
+                  0.8534534433409058
+                ]
+              },
+              {
+                "time": 0.7687499999999431,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.23436626982483977,
+                  0.972983696036698
+                ]
+              },
+              {
+                "time": 0.8934999999999294,
+                "event": "far_bounce",
+                "position": [
+                  0.6598237597865126,
+                  -0.22736902190426062,
+                  0.7793525529899905
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  44.556684631900794,
+                  -1.0339005289676881,
+                  0.019965394488897073
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.0,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 0
+      }
+    },
+    "v00-combined-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "wrong_first_landing",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              -0.9252113037883254,
+              -0.331829768659645,
+              0.779751073579035
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.515249999999971,
+                "event": "racket_contact",
+                "position": [
+                  -1.5118326212602886,
+                  -0.25000456983506003,
+                  0.8307813228778103
+                ]
+              },
+              {
+                "time": 0.6564999999999555,
+                "event": "wrong_first_landing",
+                "position": [
+                  -0.9252113037883254,
+                  -0.331829768659645,
+                  0.779751073579035
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  -6.007255125959451,
+                  -2.0536886666493706,
+                  0.019965394489787958
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 1
+      }
+    },
+    "v00-combined-s1": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "wrong_first_landing",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              -0.9227085833941737,
+              -0.3364285866237282,
+              0.7797502067664831
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.515499999999971,
+                "event": "racket_contact",
+                "position": [
+                  -1.5121823107833967,
+                  -0.2500112597252298,
+                  0.8305352254354051
+                ]
+              },
+              {
+                "time": 0.6542499999999557,
+                "event": "wrong_first_landing",
+                "position": [
+                  -0.9227085833941737,
+                  -0.3364285866237282,
+                  0.7797502067664831
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  -6.180610466454271,
+                  -3.0039009075033842,
+                  0.019965394489779045
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 1,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 2
+      }
+    },
+    "v00-combined-s2": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "wrong_first_landing",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              -0.8846771038125046,
+              -0.33829993352837157,
+              0.7797183133396153
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.5147499999999711,
+                "event": "racket_contact",
+                "position": [
+                  -1.511027473563008,
+                  -0.25001140994061927,
+                  0.8312793521429873
+                ]
+              },
+              {
+                "time": 0.6597499999999551,
+                "event": "wrong_first_landing",
+                "position": [
+                  -0.8846771038125046,
+                  -0.33829993352837157,
+                  0.7797183133396153
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  -5.896816402747034,
+                  -2.320134470617924,
+                  0.019965394489511387
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 2,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 3
+      }
+    },
+    "v00-combined_timestamped-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.654832938269972,
+              -0.24259183722661876,
+              0.7794718807302768
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.4904999999999737,
+                "event": "racket_contact",
+                "position": [
+                  -1.4738346569284755,
+                  -0.24999409341492532,
+                  0.8523559847850581
+                ]
+              },
+              {
+                "time": 0.7639999999999436,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.2448718376007308,
+                  0.9637779423852512
+                ]
+              },
+              {
+                "time": 0.8849999999999303,
+                "event": "far_bounce",
+                "position": [
+                  0.654832938269972,
+                  -0.24259183722661876,
+                  0.7794718807302768
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  45.29992279477602,
+                  -1.2626073473484871,
+                  0.01996539448892174
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 0,
+          "timestamp_aware": true
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 1
+      }
+    },
+    "v00-combined_timestamped-s1": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.667782772233718,
+              -0.25283322372790296,
+              0.7794529057091923
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.49074999999997365,
+                "event": "racket_contact",
+                "position": [
+                  -1.4741933285277746,
+                  -0.24999578613033005,
+                  0.852174046866577
+                ]
+              },
+              {
+                "time": 0.7609999999999439,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.25195345590142854,
+                  0.9631768903552911
+                ]
+              },
+              {
+                "time": 0.8827499999999305,
+                "event": "far_bounce",
+                "position": [
+                  0.667782772233718,
+                  -0.25283322372790296,
+                  0.7794529057091923
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  45.54957765312836,
+                  -1.4584641613352982,
+                  0.019965394489022015
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 1,
+          "timestamp_aware": true
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 2
+      }
+    },
+    "v00-combined_timestamped-s2": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.6663834108290608,
+              -0.2307151648895563,
+              0.7794806796795964
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.4894999999999738,
+                "event": "racket_contact",
+                "position": [
+                  -1.472310907526749,
+                  -0.2499930151530916,
+                  0.8530979683152347
+                ]
+              },
+              {
+                "time": 0.7639999999999436,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.23672336005326727,
+                  0.9685595960985514
+                ]
+              },
+              {
+                "time": 0.88774999999993,
+                "event": "far_bounce",
+                "position": [
+                  0.6663834108290608,
+                  -0.2307151648895563,
+                  0.7794806796795964
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  45.1096164496263,
+                  -1.0257208637728448,
+                  0.019965394488866486
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 2,
+          "timestamp_aware": true
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 3
+      }
+    },
+    "v00-delay_40ms-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "wrong_first_landing",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              -0.8406084154616879,
+              -0.3412908236236699,
+              0.7795836189527376
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.5142499999999711,
+                "event": "racket_contact",
+                "position": [
+                  -1.51025810324439,
+                  -0.25001131346880007,
+                  0.8317730057572948
+                ]
+              },
+              {
+                "time": 0.6667499999999543,
+                "event": "wrong_first_landing",
+                "position": [
+                  -0.8406084154616879,
+                  -0.3412908236236699,
+                  0.7795836189527376
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  -5.443265365887825,
+                  -2.1477327400995714,
+                  0.019965394490138975
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.04,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 0
+      }
+    },
+    "v00-delay_40ms_timestamped-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.6614026051570087,
+              -0.22781434081597782,
+              0.7791082111613553
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.48899999999997384,
+                "event": "racket_contact",
+                "position": [
+                  -1.4715954971624807,
+                  -0.24999058099457835,
+                  0.8534543044630072
+                ]
+              },
+              {
+                "time": 0.7684999999999431,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.23468608660173443,
+                  0.9729908938520715
+                ]
+              },
+              {
+                "time": 0.8934999999999294,
+                "event": "far_bounce",
+                "position": [
+                  0.6614026051570087,
+                  -0.22781434081597782,
+                  0.7791082111613553
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  44.45764320348443,
+                  -1.0488643011752183,
+                  0.01996539448898308
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.04,
+          "seed": 0,
+          "timestamp_aware": true
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 0
+      }
+    },
+    "v00-position_5mm-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "net_contact",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              0.6533492749944881,
+              -0.2601063637314504,
+              0.7793716775205763
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.49174999999997354,
+                "event": "racket_contact",
+                "position": [
+                  -1.475785512541754,
+                  -0.24999314666171746,
+                  0.8514024270477941
+                ]
+              },
+              {
+                "time": 0.7712499999999428,
+                "event": "net_contact",
+                "position": [
+                  -0.00652721074871457,
+                  -0.2533434043939449,
+                  0.9316152968051544
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  44.98805433765418,
+                  -1.5483198923115513,
+                  0.019965394488943747
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.0,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 0
+      }
+    },
+    "v00-position_5mm-s1": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.7536195088336577,
+              -0.24777711670699507,
+              0.779402748637406
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.48999999999997373,
+                "event": "racket_contact",
+                "position": [
+                  -1.4730318457598301,
+                  -0.2499959533704117,
+                  0.8527386948829189
+                ]
+              },
+              {
+                "time": 0.7562499999999445,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.2485345640675574,
+                  0.9810082921856701
+                ]
+              },
+              {
+                "time": 0.8919999999999295,
+                "event": "far_bounce",
+                "position": [
+                  0.7536195088336577,
+                  -0.24777711670699507,
+                  0.779402748637406
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  46.11047814535148,
+                  -1.3502516715724133,
+                  0.019965394489027927
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.0,
+          "seed": 1,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 0
+      }
+    },
+    "v00-position_5mm-s2": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.7690018468588046,
+              -0.1995438089886147,
+              0.7793685119544693
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.4859999999999742,
+                "event": "racket_contact",
+                "position": [
+                  -1.4669790231267263,
+                  -0.2499902254215744,
+                  0.8556191932078119
+                ]
+              },
+              {
+                "time": 0.7634999999999437,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.21688584300237732,
+                  1.002081085828126
+                ]
+              },
+              {
+                "time": 0.9082499999999277,
+                "event": "far_bounce",
+                "position": [
+                  0.7690018468588046,
+                  -0.1995438089886147,
+                  0.7793685119544693
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  44.325705220291475,
+                  -0.45816506516927596,
+                  0.01996539448883268
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.0,
+          "seed": 2,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 0
+      }
+    },
+    "v00-scripted-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "scripted",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.6670471589858344,
+              -0.2274257852682136,
+              0.77948999668495
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.48899999999997384,
+                "event": "racket_contact",
+                "position": [
+                  -1.4715846327815192,
+                  -0.24999114177152781,
+                  0.8534570357978676
+                ]
+              },
+              {
+                "time": 0.7674999999999432,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.23446186110278033,
+                  0.9737897346704416
+                ]
+              },
+              {
+                "time": 0.8932499999999294,
+                "event": "far_bounce",
+                "position": [
+                  0.6670471589858344,
+                  -0.2274257852682136,
+                  0.77948999668495
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  44.58257527021227,
+                  -1.0346930429344234,
+                  0.01996539448897179
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.0,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 0
+      }
+    },
+    "v00-velocity_0p05-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "wrong_first_landing",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              -1.2001249333129116,
+              -0.2606556130531625,
+              0.7796071935079464
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.4812499999999747,
+                "event": "racket_contact",
+                "position": [
+                  -1.4596587358065327,
+                  -0.24999559002374017,
+                  0.8588377280918452
+                ]
+              },
+              {
+                "time": 0.5832499999999635,
+                "event": "wrong_first_landing",
+                "position": [
+                  -1.2001249333129116,
+                  -0.2606556130531625,
+                  0.7796071935079464
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  -2.6678466649807526,
+                  0.47510901514803583,
+                  0.019965394489555654
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.0,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 1
+      }
+    },
+    "v00-velocity_0p05-s1": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.7000012387773907,
+              -0.26547975710666666,
+              0.7792047877444481
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.4904999999999737,
+                "event": "racket_contact",
+                "position": [
+                  -1.473806927850378,
+                  -0.2499967333251375,
+                  0.8523626896623813
+                ]
+              },
+              {
+                "time": 0.7592499999999441,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.2605008989177299,
+                  0.9697734678477598
+                ]
+              },
+              {
+                "time": 0.8862499999999301,
+                "event": "far_bounce",
+                "position": [
+                  0.7000012387773907,
+                  -0.26547975710666666,
+                  0.7792047877444481
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  45.818492093272006,
+                  -1.755005736300955,
+                  0.019965394488919916
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.0,
+          "seed": 1,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 2
+      }
+    },
+    "v00-velocity_0p05-s2": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.6498902860331167,
+              -0.22673822869680843,
+              0.7790938554335506
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1341913447402736,
+                  -0.25,
+                  0.7793259863470621
+                ]
+              },
+              {
+                "time": 0.48899999999997384,
+                "event": "racket_contact",
+                "position": [
+                  -1.471600769623012,
+                  -0.24999023723619151,
+                  0.8534528575012722
+                ]
+              },
+              {
+                "time": 0.7689999999999431,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.23385504670239984,
+                  0.9704910038803101
+                ]
+              },
+              {
+                "time": 0.8922499999999295,
+                "event": "far_bounce",
+                "position": [
+                  0.6498902860331167,
+                  -0.22673822869680843,
+                  0.7790938554335506
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  44.49368817395654,
+                  -1.017697211305458,
+                  0.01996539448890848
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.8,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.0,
+          "seed": 2,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 2
+      }
+    },
+    "v01-clean-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.7217816489044416,
+              -0.2685781037001239,
+              0.7789664430705865
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.43999999999997924,
+                "event": "racket_contact",
+                "position": [
+                  -1.4718665661047508,
+                  -0.24999333070079008,
+                  0.8777635862552
+                ]
+              },
+              {
+                "time": 0.7482499999999453,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.2624696453093996,
+                  1.0387828078372898
+                ]
+              },
+              {
+                "time": 0.8989999999999287,
+                "event": "far_bounce",
+                "position": [
+                  0.7217816489044416,
+                  -0.2685781037001239,
+                  0.7789664430705865
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  39.83129187985242,
+                  -1.9164606162988522,
+                  0.019965394488955873
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.0,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 0
+      }
+    },
+    "v01-combined-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "wrong_first_landing",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              -0.9110940270102775,
+              -0.35120090875564086,
+              0.779640260242983
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.46274999999997674,
+                "event": "racket_contact",
+                "position": [
+                  -1.5103925059986008,
+                  -0.25000130048353714,
+                  0.8694371977975792
+                ]
+              },
+              {
+                "time": 0.6667499999999543,
+                "event": "wrong_first_landing",
+                "position": [
+                  -0.9110940270102775,
+                  -0.35120090875564086,
+                  0.779640260242983
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  -2.3188981306344987,
+                  -2.4906481587961387,
+                  0.019965394490264982
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 1
+      }
+    },
+    "v01-combined-s1": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "wrong_first_landing",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              -0.9334903572918125,
+              -0.3540907984503863,
+              0.7794014180753236
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.4632499999999767,
+                "event": "racket_contact",
+                "position": [
+                  -1.5112093878455957,
+                  -0.2500049145154614,
+                  0.8692015521901645
+                ]
+              },
+              {
+                "time": 0.6582499999999553,
+                "event": "wrong_first_landing",
+                "position": [
+                  -0.9334903572918125,
+                  -0.3540907984503863,
+                  0.7794014180753236
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  -4.478155025090054,
+                  -2.757657063161384,
+                  0.01996539448974933
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 1,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 1
+      }
+    },
+    "v01-combined-s2": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "wrong_first_landing",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              -0.868526974681873,
+              -0.3600988799404939,
+              0.7795269802785159
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.46249999999997676,
+                "event": "racket_contact",
+                "position": [
+                  -1.5099298034288935,
+                  -0.2500065790961022,
+                  0.8695612874787124
+                ]
+              },
+              {
+                "time": 0.6662499999999544,
+                "event": "wrong_first_landing",
+                "position": [
+                  -0.868526974681873,
+                  -0.3600988799404939,
+                  0.7795269802785159
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  -4.173731174227921,
+                  -2.726115993541462,
+                  0.019965394489522992
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 2,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 2
+      }
+    },
+    "v01-combined_timestamped-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.6858538181419433,
+              -0.2943845781571697,
+              0.7789764896269545
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.4402499999999792,
+                "event": "racket_contact",
+                "position": [
+                  -1.4722745145340974,
+                  -0.24999545505932522,
+                  0.8777026910478175
+                ]
+              },
+              {
+                "time": 0.7482499999999453,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.28028807035078795,
+                  1.0258684912406784
+                ]
+              },
+              {
+                "time": 0.8912499999999296,
+                "event": "far_bounce",
+                "position": [
+                  0.6858538181419433,
+                  -0.2943845781571697,
+                  0.7789764896269545
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  39.95995143510718,
+                  -2.3960840003058874,
+                  0.019965394488814875
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 0,
+          "timestamp_aware": true
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 1
+      }
+    },
+    "v01-combined_timestamped-s1": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.6098353701462723,
+              -0.2889562440277091,
+              0.7790670678980625
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.44099999999997913,
+                "event": "racket_contact",
+                "position": [
+                  -1.473567746942145,
+                  -0.24999359322837056,
+                  0.8775020822993544
+                ]
+              },
+              {
+                "time": 0.7554999999999445,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.27755979801539193,
+                  1.007286418768862
+                ]
+              },
+              {
+                "time": 0.8849999999999303,
+                "event": "far_bounce",
+                "position": [
+                  0.6098353701462723,
+                  -0.2889562440277091,
+                  0.7790670678980625
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  39.27122795386017,
+                  -2.3473032992497402,
+                  0.019965394489004442
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 1,
+          "timestamp_aware": true
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 1
+      }
+    },
+    "v01-combined_timestamped-s2": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.7541818587607977,
+              -0.2868949143953408,
+              0.7793574211076422
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.43999999999997924,
+                "event": "racket_contact",
+                "position": [
+                  -1.4718379867239257,
+                  -0.2499958553735678,
+                  0.8777701353140875
+                ]
+              },
+              {
+                "time": 0.7429999999999459,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.2744034370902728,
+                  1.0421878053481968
+                ]
+              },
+              {
+                "time": 0.8977499999999289,
+                "event": "far_bounce",
+                "position": [
+                  0.7541818587607977,
+                  -0.2868949143953408,
+                  0.7793574211076422
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  40.34641163031367,
+                  -2.220624478781378,
+                  0.019965394489116686
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.04,
+          "seed": 2,
+          "timestamp_aware": true
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 2
+      }
+    },
+    "v01-delay_40ms-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "wrong_first_landing",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              -0.8958020219522003,
+              -0.35428629374935655,
+              0.7793755023032501
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.4622499999999768,
+                "event": "racket_contact",
+                "position": [
+                  -1.5095475397229101,
+                  -0.2500013750770073,
+                  0.8696741847065907
+                ]
+              },
+              {
+                "time": 0.669749999999954,
+                "event": "wrong_first_landing",
+                "position": [
+                  -0.8958020219522003,
+                  -0.35428629374935655,
+                  0.7793755023032501
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  -3.9861868067753314,
+                  -2.5879628228138145,
+                  0.019965394489999927
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.04,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 0
+      }
+    },
+    "v01-delay_40ms_timestamped-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.7587429727849958,
+              -0.30664183554184943,
+              0.7793257922800813
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.4402499999999792,
+                "event": "racket_contact",
+                "position": [
+                  -1.472236534995321,
+                  -0.24999859097551264,
+                  0.8777119040786516
+                ]
+              },
+              {
+                "time": 0.7407499999999462,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.2873905122638766,
+                  1.0397308182466745
+                ]
+              },
+              {
+                "time": 0.8949999999999292,
+                "event": "far_bounce",
+                "position": [
+                  0.7587429727849958,
+                  -0.30664183554184943,
+                  0.7793257922800813
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  40.82764179049925,
+                  -2.547872593331983,
+                  0.019965394488783664
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.04,
+          "seed": 0,
+          "timestamp_aware": true
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 2,
+        "mean_age_seconds": 0.039999999999982536,
+        "maximum_age_seconds": 0.040000000000048885,
+        "phase_reversals": 0
+      }
+    },
+    "v01-position_5mm-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.5599648425908658,
+              -0.2876000159221962,
+              0.7794244926763076
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.441999999999979,
+                "event": "racket_contact",
+                "position": [
+                  -1.4752680721483862,
+                  -0.2499928059416231,
+                  0.877231664948306
+                ]
+              },
+              {
+                "time": 0.7582499999999442,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.27725912197654734,
+                  0.9913509946089457
+                ]
+              },
+              {
+                "time": 0.8777499999999311,
+                "event": "far_bounce",
+                "position": [
+                  0.5599648425908658,
+                  -0.2876000159221962,
+                  0.7794244926763076
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  39.21130392158634,
+                  -2.3282521495157567,
+                  0.01996539448880373
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.0,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 0
+      }
+    },
+    "v01-position_5mm-s1": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.731737545260556,
+              -0.27898870378661933,
+              0.7794265382497441
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.4404999999999792,
+                "event": "racket_contact",
+                "position": [
+                  -1.472689930298195,
+                  -0.24999518563898745,
+                  0.8776405734699683
+                ]
+              },
+              {
+                "time": 0.7449999999999457,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.26937324671816415,
+                  1.0367141216890827
+                ]
+              },
+              {
+                "time": 0.8957499999999291,
+                "event": "far_bounce",
+                "position": [
+                  0.731737545260556,
+                  -0.27898870378661933,
+                  0.7794265382497441
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  40.45686138162737,
+                  -2.0607847213050445,
+                  0.01996539448889991
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.0,
+          "seed": 1,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 0
+      }
+    },
+    "v01-position_5mm-s2": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.8979636449751994,
+              -0.24024832992354073,
+              0.7792385008280296
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.4374999999999795,
+                "event": "racket_contact",
+                "position": [
+                  -1.467632685042773,
+                  -0.2499926097214056,
+                  0.8783690032995634
+                ]
+              },
+              {
+                "time": 0.7397499999999463,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.24395064660362045,
+                  1.0893998927180242
+                ]
+              },
+              {
+                "time": 0.923999999999926,
+                "event": "far_bounce",
+                "position": [
+                  0.8979636449751994,
+                  -0.24024832992354073,
+                  0.7792385008280296
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  40.51234856628969,
+                  -1.3836122829136952,
+                  0.01996539448897804
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.005,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.0,
+          "seed": 2,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 0
+      }
+    },
+    "v01-scripted-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "scripted",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": false,
+            "fallen": false,
+            "reason": "wrong_first_landing",
+            "own_bounce": true,
+            "net_clearance": false,
+            "first_landing": [
+              -1.1267566544894925,
+              -0.33372906468379265,
+              0.7796611607198918
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.4659999999999764,
+                "event": "racket_contact",
+                "position": [
+                  -1.5158687722585855,
+                  -0.2500014428936553,
+                  0.8678403121277071
+                ]
+              },
+              {
+                "time": 0.6319999999999582,
+                "event": "wrong_first_landing",
+                "position": [
+                  -1.1267566544894925,
+                  -0.33372906468379265,
+                  0.7796611607198918
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  -2.4164124343907596,
+                  -2.6759732509339678,
+                  0.019965394489466028
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 0,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.0,
+          "latency_s": 0.0,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 0
+      }
+    },
+    "v01-velocity_0p05-s0": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              1.084117472027687,
+              -0.18405356046697768,
+              0.7788782026275067
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.4342499999999799,
+                "event": "racket_contact",
+                "position": [
+                  -1.46214903815696,
+                  -0.24999032454481146,
+                  0.8790590342014054
+                ]
+              },
+              {
+                "time": 0.733499999999947,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.2121198948749283,
+                  1.145124281697103
+                ]
+              },
+              {
+                "time": 0.9544999999999226,
+                "event": "far_bounce",
+                "position": [
+                  1.084117472027687,
+                  -0.18405356046697768,
+                  0.7788782026275067
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  40.578712273258276,
+                  -0.44822638704288886,
+                  0.01996539448893672
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.0,
+          "seed": 0,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 1
+      }
+    },
+    "v01-velocity_0p05-s1": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.7284082554392282,
+              -0.28382504603946235,
+              0.779330864858639
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.4412499999999791,
+                "event": "racket_contact",
+                "position": [
+                  -1.4739414121729975,
+                  -0.24999653246269277,
+                  0.8774480605564847
+                ]
+              },
+              {
+                "time": 0.7439999999999458,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.27264576480605773,
+                  1.032637055891955
+                ]
+              },
+              {
+                "time": 0.8929999999999294,
+                "event": "far_bounce",
+                "position": [
+                  0.7284082554392282,
+                  -0.28382504603946235,
+                  0.779330864858639
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  40.57970999162237,
+                  -2.110905909084027,
+                  0.019965394488834075
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.0,
+          "seed": 1,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 1
+      }
+    },
+    "v01-velocity_0p05-s2": {
+      "protocol": "g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
+      "description": "One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
+      "controller_mode": "predictive-timing",
+      "feeds": [
+        {
+          "feed_id": 0,
+          "launched_at": 0.0,
+          "ball_outcome": {
+            "contacted": true,
+            "success": true,
+            "fallen": false,
+            "reason": "valid_return",
+            "own_bounce": true,
+            "net_clearance": true,
+            "first_landing": [
+              0.8031916367020154,
+              -0.2551537485865533,
+              0.7789796427928587
+            ],
+            "finished": true,
+            "trace": [
+              {
+                "time": 0.2689999999999981,
+                "event": "own_bounce",
+                "position": [
+                  -1.1826113008355486,
+                  -0.25,
+                  0.7793264253943554
+                ]
+              },
+              {
+                "time": 0.43974999999997927,
+                "event": "racket_contact",
+                "position": [
+                  -1.4714181219886964,
+                  -0.24999414946148132,
+                  0.8778330436209762
+                ]
+              },
+              {
+                "time": 0.7409999999999461,
+                "event": "net_clearance",
+                "position": [
+                  0.0,
+                  -0.25333735124111173,
+                  1.0555976401509384
+                ]
+              },
+              {
+                "time": 0.9049999999999281,
+                "event": "far_bounce",
+                "position": [
+                  0.8031916367020154,
+                  -0.2551537485865533,
+                  0.7789796427928587
+                ]
+              },
+              {
+                "time": 11.999999999994708,
+                "event": "finished",
+                "position": [
+                  40.64062630008796,
+                  -1.5908925821416415,
+                  0.019965394488851186
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "feed_boundaries": [
+        {
+          "feed_id": 0,
+          "time": 0.0,
+          "launch_position": [
+            -0.65,
+            -0.25,
+            1.0
+          ],
+          "launch_velocity": [
+            -1.98,
+            0.0,
+            0.5
+          ],
+          "robot_qpos_change_at_feed": 0.0,
+          "wbc_history_change_at_feed": 0.0
+        }
+      ],
+      "feed_interval_seconds": 3.0,
+      "feeder_frame": "fixed world frame",
+      "requested_seconds": 12.0,
+      "actual_seconds": 11.999999999994708,
+      "physics_substeps": 48000,
+      "robot_resets_after_start": 0,
+      "wbc_history_resets_after_start": 0,
+      "ball_replacements_after_start": 0,
+      "fallen": false,
+      "external_support_substeps": 0,
+      "nonfoot_ground_substeps": 0,
+      "maximum_force_cap_ratio": 1.0,
+      "failure": null,
+      "full_session_stance_accepted": true,
+      "accepted_returns": 1,
+      "ball_observations": {
+        "config": {
+          "position_std_m": 0.0,
+          "velocity_std_mps": 0.05,
+          "latency_s": 0.0,
+          "seed": 2,
+          "timestamp_aware": false
+        },
+        "capture_hz": 50,
+        "samples_captured": 600,
+        "ticks_without_measurement": 0,
+        "mean_age_seconds": 0.0,
+        "maximum_age_seconds": 0.0,
+        "phase_reversals": 2
+      }
+    }
+  },
+  "largest_phase_reversal_seconds_by_trial": {
+    "v00-clean-s0": 0.0,
+    "v00-combined-s0": 0.015877770010017556,
+    "v00-combined-s1": 0.026138250224448947,
+    "v00-combined-s2": 0.012812537395695225,
+    "v00-combined_timestamped-s0": 0.015877770010017556,
+    "v00-combined_timestamped-s1": 0.026138250224449017,
+    "v00-combined_timestamped-s2": 0.012812537395695295,
+    "v00-delay_40ms-s0": 0.0,
+    "v00-delay_40ms_timestamped-s0": 0.0,
+    "v00-position_5mm-s0": 0.0,
+    "v00-position_5mm-s1": 0.0,
+    "v00-position_5mm-s2": 0.0,
+    "v00-scripted-s0": 0.0,
+    "v00-velocity_0p05-s0": 0.007511354152716865,
+    "v00-velocity_0p05-s1": 0.009998143614430854,
+    "v00-velocity_0p05-s2": 0.007841115955726955,
+    "v01-clean-s0": 0.0,
+    "v01-combined-s0": 0.009860181772051113,
+    "v01-combined-s1": 0.018615032638371748,
+    "v01-combined-s2": 0.006965894856412719,
+    "v01-combined_timestamped-s0": 0.009860181772051113,
+    "v01-combined_timestamped-s1": 0.018615032638371748,
+    "v01-combined_timestamped-s2": 0.006965894856412719,
+    "v01-delay_40ms-s0": 0.0,
+    "v01-delay_40ms_timestamped-s0": 0.0,
+    "v01-position_5mm-s0": 0.0,
+    "v01-position_5mm-s1": 0.0,
+    "v01-position_5mm-s2": 0.0,
+    "v01-scripted-s0": 0.0,
+    "v01-velocity_0p05-s0": 0.002288234285688917,
+    "v01-velocity_0p05-s1": 0.00396246286818136,
+    "v01-velocity_0p05-s2": 0.0034669081537325175
+  },
+  "baseline_regression": {
+    "protocol": "one independent 12-second nominal feed",
+    "all_arrays_bitwise_equal_to_pernav_commit_cfe6451": true,
+    "arrays": {
+      "time": true,
+      "trial_time": true,
+      "trial_id": true,
+      "qpos": true,
+      "qvel": true,
+      "ctrl": true,
+      "raw7": true,
+      "reference39": true,
+      "raw_wbc29": true,
+      "observation132": true
+    },
+    "frames": 600,
+    "accepted_returns": 1
+  },
+  "evidence_verification": {
+    "trial_report_hashes_verified": 32,
+    "npz_artifact_hashes_verified": 64,
+    "all_previous_wbc_actions_verified": true,
+    "causal_delivery_verified": true,
+    "all_32_full_stance_audits_accepted": true,
+    "total_physics_substeps": 1536000,
+    "tests_passed": 68,
+    "optional_egl_tests_skipped": 2
+  },
+  "raw_artifacts_note": "Full reports, observations.npz and session.npz remain in outputs/noise-latency-pilot-verified/trials. Reproduce with the documented command; hashes identify this exact run. Physical event reports are embedded below."
+}

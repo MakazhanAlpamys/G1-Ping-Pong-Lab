@@ -93,3 +93,48 @@ This is an independent-feed, small-seed sensing experiment. Its outcome does not
 establish continuous endurance, robustness to correlated camera error, occlusion,
 spin, variable capture rate, delay jitter or real-hardware performance. In
 particular, the WBC still receives exact simulated robot state.
+
+## Recorded pilot
+
+The [published evidence](experiments/noise-latency-pilot.json) was generated from
+runtime commit `18717db`, with Python 3.12.10, MuJoCo 3.11.0, NumPy 2.5.4 and
+ONNX Runtime 1.31.0 on Windows. All 32 trials used the full 12-second window.
+Counts below are accepted returns / trials for the prespecified seeds:
+
+| Profile | Nominal, -1.8 m/s | Faster +10%, -1.98 m/s |
+| --- | --- | --- |
+| Scripted control | 1/1 | 0/1 |
+| Clean predictive control | 1/1 | 1/1 |
+| Position noise, 5 mm per axis | 2/3 | 3/3 |
+| Velocity noise, 0.05 m/s per axis | 2/3 | 3/3 |
+| Delay 40 ms, sample age ignored | 0/1 | 0/1 |
+| Delay 40 ms, capture time used | 1/1 | 1/1 |
+| Combined noise + delay, sample age ignored | 0/3 | 0/3 |
+| Combined noise + delay, capture time used | 3/3 | 3/3 |
+
+Every trial passed the stance audit: no fall, external table/net support,
+non-foot ground contact or native force-cap excess. In total, 1,536,000 physics
+substeps were audited. The independently rerun 12-second scripted control
+matched Pernav's unmodified `cfe6451` runtime bitwise across all 600 recorded
+frames and every state/control array.
+
+Capture timestamps restored the tested delayed returns, including the combined
+profiles. This result depends on the known calibrated flight model and does not
+establish a general latency bound. The matrix tests one delay magnitude and
+one magnitude for each noise component; three seeds are a pilot, not a reliable
+success-rate estimate. The different nominal/faster counts should not be read
+as evidence that increasing feed speed generally improves noise robustness.
+
+Noisy velocity inputs also produced 29 backward phase steps across the noisy
+trials, with a largest single reversal of about 26.14 ms. Some trials still
+succeeded despite those reversals. Capture-time compensation alone does not
+remove that jitter; the observation traces provide reproducible inputs for
+Pernav's filtering work. Compare any future filter with the same profiles,
+seeds and full stance windows before widening the speed/noise/delay grid.
+
+The evidence file embeds the full per-trial physical event reports and artifact
+hashes. All 32 report hashes, 64 NPZ artifact hashes, causal delivery clocks and
+all saved WBC previous-action histories were checked. Large state and sensor
+archives remain local under `outputs/noise-latency-pilot-verified/` and can be
+regenerated using the command above. Unit/integration verification was
+68 passed, 2 skipped (optional EGL graphics), plus 16 passing subtests.

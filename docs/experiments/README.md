@@ -18,3 +18,10 @@ current runtime keeps fixed world-frame feeds as its default. The released
 two-feed recording has its own current-source report and verification receipt
 in the parent directory. These reports establish the observed limits, rather
 than an estimate of success against unknown feeds.
+
+## Separate ball-observation experiment
+
+The [noise and latency benchmark](../noise-latency.md) and its
+[32-trial pilot evidence](noise-latency-pilot.json) use independent reset trials
+with synthetic sensing errors. They are separate from the continuous endurance
+probes above and do not establish longer rallies.
