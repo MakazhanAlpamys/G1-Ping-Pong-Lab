@@ -34,7 +34,7 @@ def relative_feed_state(initial_root, current_root):
 
 
 def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relative_feeder=False,
-                   controller_mode="scripted", custom_velocity=None):
+                   controller_mode="scripted", custom_velocity=None, observation_config=None):
     if not 1 <= feeds <= 32 or interval < 2. or tail < 1.2:
         raise ValueError("Use 1..32 feeds, interval >=2 seconds and tail >=1.2 seconds")
     for duration in (interval, tail):
@@ -49,6 +49,11 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     if controller_mode != "scripted" and robot_relative_feeder:
         raise ValueError("predictive timing uses a fixed world-frame interception plane; "
                          "it is not supported with robot_relative_feeder")
+    if observation_config is not None:
+        from .ball_observations import BallObservationStream, ObservationConfig
+        from .observed_interception import ObservedTimingInterceptor
+        if not isinstance(observation_config, ObservationConfig):
+            raise ValueError("observation_config must be an ObservationConfig")
     model = mujoco.MjModel.from_xml_path(str(scene))
     if abs(model.opt.timestep-.00025) > 1e-12 or model.nmocap or model.neq:
         raise ValueError("Native .25 ms free robot and no mocap/equality required")
@@ -56,7 +61,11 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     data = mujoco.MjData(model)
     mujoco.mj_resetDataKeyframe(model, data, 0)  # Once for the entire session.
     mujoco.mj_forward(model, data)
-    interceptor = PredictiveTimingInterceptor(model, controller, mode=controller_mode) if controller_mode != "scripted" else None
+    if observation_config is not None:
+        interceptor = ObservedTimingInterceptor(model, controller, mode=controller_mode,
+            observation_stream=BallObservationStream(observation_config))
+    else:
+        interceptor = PredictiveTimingInterceptor(model, controller, mode=controller_mode) if controller_mode != "scripted" else None
     initial_root=data.qpos[:7].copy()
     base_reference = controller.reference(data)
     ball_q = int(model.joint("ball/ball_freejoint").qposadr[0])
@@ -151,6 +160,9 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
         "fallen":fallen_any,"external_support_substeps":support_steps,"nonfoot_ground_substeps":nonfoot_steps,
         "maximum_force_cap_ratio":cap_ratio,"failure":failure,"full_session_stance_accepted":accepted,
         "accepted_returns":sum(bool(r['ball_outcome']['success']) for r in reports) if accepted else 0}
+    if observation_config is not None:
+        report["ball_observations"] = interceptor.observation_stream.summary()
+        report["observation_trace"] = interceptor.observation_stream.trace
     return report,frames
 
 
