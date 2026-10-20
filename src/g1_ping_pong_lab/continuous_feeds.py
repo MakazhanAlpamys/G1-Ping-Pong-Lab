@@ -40,6 +40,15 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     for duration in (interval, tail):
         if not np.isfinite(duration) or abs(duration/.02-round(duration/.02)) > 1e-8:
             raise ValueError("Durations must be finite multiples of .02 seconds")
+    if custom_velocity is not None:
+        custom_velocity = np.asarray(custom_velocity, dtype=np.float64)
+        if custom_velocity.shape != (3,) or not np.isfinite(custom_velocity).all():
+            raise ValueError("custom_velocity must be three finite values")
+        if robot_relative_feeder:
+            raise ValueError("custom_velocity cannot be combined with robot_relative_feeder")
+    if controller_mode != "scripted" and robot_relative_feeder:
+        raise ValueError("predictive timing uses a fixed world-frame interception plane; "
+                         "it is not supported with robot_relative_feeder")
     model = mujoco.MjModel.from_xml_path(str(scene))
     if abs(model.opt.timestep-.00025) > 1e-12 or model.nmocap or model.neq:
         raise ValueError("Native .25 ms free robot and no mocap/equality required")
@@ -83,7 +92,7 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
                 position, velocity = relative_feed_state(initial_root, data.qpos[:7])
             elif custom_velocity is not None:
                 position = np.array([-.65, -.25, 1.])
-                velocity = np.asarray(custom_velocity, dtype=np.float64)
+                velocity = custom_velocity
             else:
                 position, velocity = np.array([-.65, -.25, 1.]), np.array([-1.8, 0., .5])
             data.qpos[ball_q:ball_q+7]=np.r_[position,1.,0.,0.,0.]

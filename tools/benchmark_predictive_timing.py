@@ -46,7 +46,7 @@ def run_endurance_suite(scene_path: Path, wbc_path: Path) -> list[dict]:
             elapsed = time.time() - t0
 
             reasons = [f["ball_outcome"]["reason"] for f in report["feeds"]]
-            success_count = sum(bool(f["ball_outcome"]["success"]) for f in report["feeds"])
+            success_count = report["accepted_returns"]
             contact_count = sum(bool(f["ball_outcome"].get("contacted", False)) for f in report["feeds"])
             success_rate = (success_count / feeds) * 100.0
             contact_rate = (contact_count / feeds) * 100.0
@@ -99,7 +99,7 @@ def run_velocity_sweep_suite(scene_path: Path, wbc_path: Path) -> list[dict]:
             )
             f0 = report["feeds"][0]["ball_outcome"]
             contacted = bool(f0.get("contacted", False))
-            success = bool(f0.get("success", False))
+            success = bool(report["accepted_returns"] > 0)
             reason = f0.get("reason", "unknown")
 
             contact_time = None
@@ -166,7 +166,7 @@ def run_variation_suite(scene_path: Path, wbc_path: Path) -> list[dict]:
                 "case_name": tc["name"],
                 "velocity": tc["v"],
                 "controller_mode": mode,
-                "success": bool(f0.get("success", False)),
+                "success": bool(report["accepted_returns"] > 0),
                 "reason": f0.get("reason", "unknown"),
                 "contacted": bool(f0.get("contacted", False)),
             }

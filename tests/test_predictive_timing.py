@@ -3,6 +3,7 @@ import mujoco
 import numpy as np
 import pytest
 
+from g1_ping_pong_lab.continuous_feeds import run_continuous
 from g1_ping_pong_lab.interception import (
     BallTrajectoryPredictor,
     DescendingInterceptionPlanner,
@@ -12,11 +13,21 @@ from g1_ping_pong_lab.runtime import Controller, stroke_at
 
 
 @pytest.fixture(scope="module")
-def scene_and_controller():
+def _model_and_controller():
     model = mujoco.MjModel.from_xml_path("assets/scene.xml")
     ctrl = Controller(model, "assets/wbc")
+    return model, ctrl
+
+
+@pytest.fixture
+def scene_and_controller(_model_and_controller):
+    model, ctrl = _model_and_controller
     data = mujoco.MjData(model)
     mujoco.mj_resetDataKeyframe(model, data, 0)
+    bq = int(model.joint("ball/ball_freejoint").qposadr[0])
+    bv = int(model.joint("ball/ball_freejoint").dofadr[0])
+    data.qpos[bq : bq + 7] = [-0.65, -0.25, 1.0, 1.0, 0.0, 0.0, 0.0]
+    data.qvel[bv : bv + 6] = [-1.8, 0.0, 0.5, 0.0, 0.0, 0.0]
     mujoco.mj_forward(model, data)
     return model, ctrl, data
 
@@ -195,3 +206,33 @@ class TestPredictiveTimingInterceptor:
         assert out.shape == (7,)
         assert np.all(np.isfinite(out))
         assert np.all(np.abs(out) <= 1.0)
+
+
+class TestContinuousFeedsValidation:
+    def test_invalid_custom_velocity_shape(self):
+        with pytest.raises(ValueError, match="custom_velocity must be three finite values"):
+            run_continuous("assets/scene.xml", "assets/wbc", feeds=1, custom_velocity=[1.0, 2.0])
+
+    def test_non_finite_custom_velocity(self):
+        with pytest.raises(ValueError, match="custom_velocity must be three finite values"):
+            run_continuous("assets/scene.xml", "assets/wbc", feeds=1, custom_velocity=[np.nan, 0.0, 0.5])
+
+    def test_custom_velocity_with_robot_relative_feeder(self):
+        with pytest.raises(ValueError, match="custom_velocity cannot be combined with robot_relative_feeder"):
+            run_continuous(
+                "assets/scene.xml",
+                "assets/wbc",
+                feeds=1,
+                robot_relative_feeder=True,
+                custom_velocity=[-1.8, 0.0, 0.5],
+            )
+
+    def test_predictive_timing_with_robot_relative_feeder(self):
+        with pytest.raises(ValueError, match="predictive timing uses a fixed world-frame interception plane"):
+            run_continuous(
+                "assets/scene.xml",
+                "assets/wbc",
+                feeds=1,
+                controller_mode="predictive-timing",
+                robot_relative_feeder=True,
+            )
