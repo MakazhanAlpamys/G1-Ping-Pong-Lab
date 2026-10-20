@@ -72,6 +72,17 @@ def test_sensor_report_counts_phase_reversals_without_counting_feed_resets():
     assert sensor.summary()["samples_captured"] == 4
 
 
+def test_phase_reversal_magnitude_ignores_normal_feed_clock_reset():
+    sensor = BallObservationStream(ObservationConfig())
+    for time, phase in [(0., .1), (.02, .08), (.04, .07)]:
+        sensor.observe(time, [0., 0., 1.], [-2., 0., 0.])
+        sensor.record_plan(phase)
+    sensor.reset_feed(1)
+    sensor.observe(0., [0., 0., 1.], [-2., 0., 0.])
+    sensor.record_plan(0.)
+    assert sensor.summary().get("largest_phase_reversal_seconds") == pytest.approx(.02)
+
+
 @pytest.mark.parametrize("mode", ["scripted", "predictive-timing"])
 def test_clean_sensor_preserves_native_trajectory(mode):
     import inspect

@@ -138,3 +138,37 @@ all saved WBC previous-action histories were checked. Large state and sensor
 archives remain local under `outputs/noise-latency-pilot-verified/` and can be
 regenerated using the command above. Unit/integration verification was
 68 passed, 2 skipped (optional EGL graphics), plus 16 passing subtests.
+
+## Prespecified sensitivity study
+
+The [sensitivity matrix](experiments/noise-latency-sensitivity-matrix.json)
+widens the original pilot while retaining its simulator, incoming feeds, scoring
+and 12-second stance protocol. Run it with ten new seeds, disjoint from the
+pilot's seeds 0, 1 and 2:
+
+```bash
+python -m g1_ping_pong_lab.observation_benchmark --matrix docs/experiments/noise-latency-sensitivity-matrix.json --seeds 10 11 12 13 14 15 16 17 18 19 --workers 8 --keep-states --output outputs/noise-latency-sensitivity
+```
+
+This defines 182 trials: 160 noisy trials and 22 deterministic controls, across
+the same nominal and +10% feed speeds. Per-axis position standard deviation is
+1, 5 or 10 mm; velocity standard deviation is 0.01, 0.05 or 0.1 m/s. Pure delay is
+tested at 20, 40 and 80 ms with both clocks, plus 120, 200 and 300 ms with capture
+time. The combined 5 mm / 0.05 m/s / 40 ms condition is tested with both clocks
+over all ten new seeds. Controls run once per speed, not once per seed.
+
+The larger delays test a distinct limitation: capture-time compensation can
+correct the flight clock, but cannot recover physical preparation time lost
+while waiting for the first measurement. Any observed transition between success
+and failure is a boundary for these fixed launches and startup policy, not a
+general sensor latency specification.
+
+`--matrix` accepts a JSON object mapping profile names to `ObservationConfig`
+fields, excluding `seed`; seeds remain common across profiles. `scripted` is the
+reserved fixed-arm control name. Names are restricted to ASCII letters, digits,
+hyphens and underscores so IDs cannot escape the output directory. Sensor
+settings and names are validated before any output is created. The summary
+records the hash of the input JSON and embeds each case's actual settings.
+`--profiles` can select a subset of either the built-in or supplied matrix.
+The largest backward phase step is now recorded directly per trial and group,
+in addition to the total count; feed clock resets do not count as reversals.

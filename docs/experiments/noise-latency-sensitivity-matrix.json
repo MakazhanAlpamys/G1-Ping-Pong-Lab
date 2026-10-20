@@ -1,0 +1,23 @@
+{
+  "scripted": {},
+  "clean": {},
+  "position_1mm": {"position_std_m": 0.001},
+  "position_5mm": {"position_std_m": 0.005},
+  "position_10mm": {"position_std_m": 0.01},
+  "velocity_0p01": {"velocity_std_mps": 0.01},
+  "velocity_0p05": {"velocity_std_mps": 0.05},
+  "velocity_0p10": {"velocity_std_mps": 0.1},
+  "delay_20ms": {"latency_s": 0.02},
+  "delay_20ms_timestamped": {"latency_s": 0.02, "timestamp_aware": true},
+  "delay_40ms": {"latency_s": 0.04},
+  "delay_40ms_timestamped": {"latency_s": 0.04, "timestamp_aware": true},
+  "delay_80ms": {"latency_s": 0.08},
+  "delay_80ms_timestamped": {"latency_s": 0.08, "timestamp_aware": true},
+  "delay_120ms_timestamped": {"latency_s": 0.12, "timestamp_aware": true},
+  "delay_200ms_timestamped": {"latency_s": 0.2, "timestamp_aware": true},
+  "delay_300ms_timestamped": {"latency_s": 0.3, "timestamp_aware": true},
+  "combined_40ms": {"position_std_m": 0.005, "velocity_std_mps": 0.05, "latency_s": 0.04},
+  "combined_40ms_timestamped": {
+    "position_std_m": 0.005, "velocity_std_mps": 0.05, "latency_s": 0.04, "timestamp_aware": true
+  }
+}

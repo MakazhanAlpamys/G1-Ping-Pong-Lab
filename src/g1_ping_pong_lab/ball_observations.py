@@ -89,13 +89,14 @@ class BallObservationStream:
 
     def summary(self):
         ages = [row["age_seconds"] for row in self.trace if row["age_seconds"] is not None]
-        reversals = sum(b["phase"] < a["phase"] - 1.e-9
-                        for a, b in zip(self.trace, self.trace[1:])
-                        if a["feed_id"] == b["feed_id"]
-                        and a["phase"] is not None and b["phase"] is not None)
+        backward_steps = [max(0., a["phase"] - b["phase"])
+                          for a, b in zip(self.trace, self.trace[1:])
+                          if a["feed_id"] == b["feed_id"]
+                          and a["phase"] is not None and b["phase"] is not None]
         return {"config": asdict(self.config), "capture_hz": 50,
                 "samples_captured": len(self.trace),
                 "ticks_without_measurement": sum(r["captured_at"] is None for r in self.trace),
                 "mean_age_seconds": float(np.mean(ages)) if ages else None,
                 "maximum_age_seconds": max(ages) if ages else None,
-                "phase_reversals": reversals}
+                "phase_reversals": sum(step > 1.e-9 for step in backward_steps),
+                "largest_phase_reversal_seconds": max(backward_steps, default=0.)}

@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import platform
+import re
 import subprocess
 import time
 
@@ -36,19 +37,30 @@ def file_sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def make_cases(*, seeds=(0, 1, 2), velocities=(-1.8, -1.98), profiles=None):
-    profiles = list(PROFILES) if profiles is None else list(profiles)
+def make_cases(*, seeds=(0, 1, 2), velocities=(-1.8, -1.98), profiles=None, profile_configs=None):
+    configs = PROFILES if profile_configs is None else profile_configs
+    if not isinstance(configs, dict) or not configs:
+        raise ValueError("Profile configurations must be a nonempty mapping")
+    for name, params in configs.items():
+        if (not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", name)
+                or not isinstance(params, dict) or "seed" in params):
+            raise ValueError("Use safe profile names and sensor settings without a per-profile seed")
+        try:
+            ObservationConfig(**params)
+        except (TypeError, ValueError) as error:
+            raise ValueError(f"Invalid sensor settings for profile {name}: {error}") from error
+    profiles = list(configs) if profiles is None else list(profiles)
     if (not seeds or len(set(seeds)) != len(seeds)
             or any(not isinstance(seed, int) or seed < 0 for seed in seeds)
             or not velocities or len(set(velocities)) != len(velocities)
             or any(not np.isfinite(vx) or vx >= -.1 for vx in velocities)
             or not profiles or len(set(profiles)) != len(profiles)
-            or any(name not in PROFILES for name in profiles)):
+            or any(name not in configs for name in profiles)):
         raise ValueError("Use distinct nonnegative seeds, incoming finite velocities and known profiles")
     cases = []
     for index, vx in enumerate(velocities):
         for profile in profiles:
-            params = PROFILES[profile]
+            params = configs[profile]
             noisy = params.get("position_std_m", 0.) or params.get("velocity_std_mps", 0.)
             for seed in seeds if noisy else seeds[:1]:
                 cases.append({"id": f"v{index:02d}-{profile}-s{seed}", "profile": profile,
@@ -63,11 +75,14 @@ def aggregate_results(rows):
     for row in rows:
         key = row["vx"], row["profile"]
         group = groups.setdefault(key, {"vx": row["vx"], "profile": row["profile"],
-            "trials": 0, "accepted_returns": 0, "stance_accepted_trials": 0, "phase_reversals": 0})
+            "trials": 0, "accepted_returns": 0, "stance_accepted_trials": 0, "phase_reversals": 0,
+            "largest_phase_reversal_seconds": 0.})
         group["trials"] += 1
         group["accepted_returns"] += row["accepted_returns"]
         group["stance_accepted_trials"] += int(row["stance_accepted"])
         group["phase_reversals"] += row["phase_reversals"]
+        group["largest_phase_reversal_seconds"] = max(group["largest_phase_reversal_seconds"],
+            row.get("largest_phase_reversal_seconds", 0.))
     return [groups[key] for key in sorted(groups)]
 
 
@@ -113,6 +128,7 @@ def run_case(case, *, scene, assets, output, seconds=12., keep_states=False):
            "stance_accepted": report["full_session_stance_accepted"], "fallen": report["fallen"],
            "max_force_cap_ratio": report["maximum_force_cap_ratio"],
            "physics_substeps": report["physics_substeps"], "phase_reversals": sensor["phase_reversals"],
+           "largest_phase_reversal_seconds": sensor["largest_phase_reversal_seconds"],
            "maximum_age_seconds": sensor["maximum_age_seconds"],
            "ticks_without_measurement": sensor["ticks_without_measurement"]}
     document = {"case": case, "summary": row, "simulation": report,
@@ -134,13 +150,16 @@ def main():
     parser.add_argument("--output", type=Path, default=Path("outputs/noise-latency"))
     parser.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2])
     parser.add_argument("--vx", nargs="+", type=float, default=[-1.8, -1.98])
-    parser.add_argument("--profiles", nargs="+", choices=list(PROFILES), default=list(PROFILES))
+    parser.add_argument("--profiles", nargs="+", help="Select profiles from the built-in set or --matrix")
+    parser.add_argument("--matrix", type=Path, help="JSON mapping of profile names to sensor settings")
     parser.add_argument("--seconds", type=float, default=12.)
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--keep-states", action="store_true")
     args = parser.parse_args()
     try:
-        cases = make_cases(seeds=args.seeds, velocities=args.vx, profiles=args.profiles)
+        matrix_bytes = args.matrix.read_bytes() if args.matrix else None
+        cases = make_cases(seeds=args.seeds, velocities=args.vx, profiles=args.profiles,
+                           profile_configs=json.loads(matrix_bytes) if matrix_bytes is not None else None)
         if (not np.isfinite(args.seconds) or args.seconds < 1.2
                 or abs(args.seconds/.02-round(args.seconds/.02)) > 1.e-8
                 or not 1 <= args.workers <= 16):
@@ -163,12 +182,13 @@ def main():
     rows.sort(key=lambda row: row["id"])
     summary = {"protocol": "g1-ping-pong-lab.ball-observation-noise-latency-v1",
                "created_at": datetime.now(timezone.utc).isoformat(), "seconds_per_trial": args.seconds,
+               "matrix_sha256": hashlib.sha256(matrix_bytes).hexdigest() if matrix_bytes is not None else None,
                "assumptions": ["Independent reset trials with fixed feeds and three-dimensional Gaussian noise.",
                    "Ball measurements captured at 50 Hz; delivery ages are quantized to control ticks.",
                    "Only predictor inputs are perturbed; WBC uses exact simulator state.",
                    "Startup holds READY until the first delayed measurement arrives.",
                    "Timestamp-aware mode uses capture time; it adds no filtering or future state.",
-                   "Small synthetic-noise pilot; no camera model, hardware validation or endurance claim."],
+                   "Synthetic-noise study; no camera model, hardware validation or endurance claim."],
                "provenance": source, "cases": cases, "trials": rows, "groups": aggregate_results(rows),
                "trial_report_sha256": {row["id"]: file_sha(args.output/"trials"/row["id"]/"report.json")
                                        for row in rows}}
