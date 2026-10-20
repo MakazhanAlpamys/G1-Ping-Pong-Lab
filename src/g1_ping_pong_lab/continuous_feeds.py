@@ -13,7 +13,7 @@ import numpy as np
 
 from .runtime import Controller, FORCE_CAPS, stroke_at, sha
 from .scoring import ReturnAttempt, TableGeometry
-from .interception import PredictiveTimingInterceptor
+from .interception import PredictiveTimingInterceptor, StanceRecoveryController
 
 
 def relative_feed_state(initial_root, current_root):
@@ -34,7 +34,7 @@ def relative_feed_state(initial_root, current_root):
 
 
 def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relative_feeder=False,
-                   controller_mode="scripted", custom_velocity=None):
+                   controller_mode="scripted", custom_velocity=None, stance_recovery=False):
     if not 1 <= feeds <= 32 or interval < 2. or tail < 1.2:
         raise ValueError("Use 1..32 feeds, interval >=2 seconds and tail >=1.2 seconds")
     for duration in (interval, tail):
@@ -56,7 +56,9 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     data = mujoco.MjData(model)
     mujoco.mj_resetDataKeyframe(model, data, 0)  # Once for the entire session.
     mujoco.mj_forward(model, data)
-    interceptor = PredictiveTimingInterceptor(model, controller, mode=controller_mode) if controller_mode != "scripted" else None
+    interceptor_mode = "predictive-timing" if controller_mode in ("stance-recovery", "predictive-timing-with-recovery") else controller_mode
+    interceptor = PredictiveTimingInterceptor(model, controller, mode=interceptor_mode) if interceptor_mode != "scripted" else None
+    recovery_controller = StanceRecoveryController() if (stance_recovery or controller_mode in ("stance-recovery", "predictive-timing-with-recovery")) else None
     initial_root=data.qpos[:7].copy()
     base_reference = controller.reference(data)
     ball_q = int(model.joint("ball/ball_freejoint").qposadr[0])
@@ -101,6 +103,8 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
             mujoco.mj_forward(model,data)
             if interceptor is not None:
                 interceptor.reset_feed(feed_id, data)
+            if recovery_controller is not None:
+                recovery_controller.reset_feed(feed_id)
             boundaries.append({"feed_id":feed_id,"time":feed_started,
                 "launch_position":position.tolist(),"launch_velocity":velocity.tolist(),
                 "robot_qpos_change_at_feed":float(np.max(abs(data.qpos[:ball_q]-before))),
@@ -111,6 +115,8 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
             ref=base_reference.copy()
             raw7=interceptor.step(data, relative) if interceptor is not None else stroke_at(relative)
             ref[10+controller.arm]+=.7*raw7
+            if recovery_controller is not None:
+                recovery_controller.apply_recovery(data, ref, relative)
             ref[10:]=np.clip(ref[10:],controller.ranges[:,0],controller.ranges[:,1])
             raw29,obs=controller.apply(data,ref)
         mujoco.mj_step(model,data)
