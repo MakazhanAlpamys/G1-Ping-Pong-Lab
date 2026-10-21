@@ -66,7 +66,7 @@ def audit_stance_drift(
             "left_foot_airborne_displacement_cm": float(s.left_foot_airborne_displacement_cm),
             "right_foot_airborne_displacement_cm": float(s.right_foot_airborne_displacement_cm),
             "recovery_entry_yaw_err_deg": rm.get("recovery_entry_yaw_err_deg"),
-            "recovery_exit_yaw_err_deg": rm.get("recovery_exit_yaw_err_exit_deg", rm.get("recovery_exit_yaw_err_deg")),
+            "recovery_exit_yaw_err_deg": rm.get("recovery_exit_yaw_err_deg"),
             "absolute_yaw_error_reduction_deg": rm.get("absolute_yaw_error_reduction_deg"),
             "signed_yaw_correction_deg": rm.get("signed_yaw_correction_deg"),
             "left_foot_lifted": bool(s.left_foot_lifted),

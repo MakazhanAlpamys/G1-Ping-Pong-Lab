@@ -1,6 +1,9 @@
 """Unit and integration tests for stance tracking, drift diagnostics, and closed-loop stance recovery."""
 from __future__ import annotations
 
+from pathlib import Path
+import sys
+
 import mujoco
 import numpy as np
 import pytest
@@ -267,21 +270,52 @@ class TestClosedLoopPhysicalRecovery:
         assert m["absolute_yaw_error_reduction_deg"] > 0.0
         assert abs(m["recovery_exit_yaw_err_deg"]) < abs(m["recovery_entry_yaw_err_deg"])
 
-    def test_closed_loop_baseline_has_no_recovery_reduction(self):
-        """In predictive-timing alone (no stance recovery), heading error does not systematically reduce during idle window."""
+    def test_paired_recovery_window_reduction_demonstrates_causal_effect(self):
+        """Evaluate paired difference in recovery-window error reduction between baseline and stance recovery.
+
+        Both controllers start from the identical initial keyframe. During active stroke (t < 1.05s),
+        both execute the identical predictive timing interceptor and enter recovery with identical
+        heading error. During the recovery window (t in [1.05, 2.95]s), stance recovery actively drives
+        error down while baseline undergoes passive dynamics.
+        """
         report_base, _ = run_continuous(
             "assets/scene.xml", "assets/wbc",
             feeds=1, interval=3.0, tail=3.0,
             controller_mode="predictive-timing",
             diagnostics=True
         )
+        report_rec, _ = run_continuous(
+            "assets/scene.xml", "assets/wbc",
+            feeds=1, interval=3.0, tail=3.0,
+            controller_mode="stance-recovery",
+            diagnostics=True
+        )
         m_base = report_base["recovery_metrics"][0]
-        # In baseline, without active recovery, error reduction is near zero or negative
-        assert m_base["absolute_yaw_error_reduction_deg"] < 0.2
+        m_rec = report_rec["recovery_metrics"][0]
 
-    def test_scripted_baseline_compatibility(self):
-        """Empirically verify default scripted execution matches baseline criteria."""
-        report, _ = run_continuous(
+        # Pre-stroke and entry states are identical
+        assert abs(m_rec["pre_stroke_torso_yaw_deg"] - m_base["pre_stroke_torso_yaw_deg"]) < 1e-4
+        assert abs(m_rec["recovery_entry_yaw_err_deg"] - m_base["recovery_entry_yaw_err_deg"]) < 1e-4
+        entry_err = m_rec["recovery_entry_yaw_err_deg"]
+        assert abs(entry_err) > 2.0  # Stroke induced significant yaw drift (>2 deg)
+
+        # Stance recovery reduces error: |exit| < |entry|
+        assert abs(m_rec["recovery_exit_yaw_err_deg"]) < abs(m_rec["recovery_entry_yaw_err_deg"])
+        assert m_rec["absolute_yaw_error_reduction_deg"] > 1.5
+
+        # Paired difference isolates causal recovery effect over identical window
+        paired_reduction = m_rec["absolute_yaw_error_reduction_deg"] - m_base["absolute_yaw_error_reduction_deg"]
+        assert paired_reduction > 2.0  # Substantial positive causal recovery
+
+    def test_scripted_baseline_reference_and_state_invariants(self):
+        """Empirically verify that default scripted execution strictly produces unaugmented references.
+
+        Verifies that for every saved frame:
+        - Base linear and angular velocity references ref[1:7] are strictly zero (no stance recovery commands).
+        - Torso height reference ref[0] remains at nominal standing height (~0.80 m).
+        - Whole session achieves standard baseline invariants (accepted, 2 valid returns, within force cap).
+        """
+        report, frames = run_continuous(
             "assets/scene.xml", "assets/wbc",
             feeds=2, interval=3.0, tail=3.0,
             controller_mode="scripted"
@@ -290,3 +324,86 @@ class TestClosedLoopPhysicalRecovery:
         assert report["valid_returns"] == 2
         assert report["maximum_force_cap_ratio"] <= 1.000001
         assert report["fallen"] is False
+
+        for f in frames:
+            ref = f["reference39"]
+            # Torso height reference remains nominal standing height
+            assert 0.70 < ref[0] < 0.90
+            # Base velocity references must be strictly zero (no stance recovery commands applied)
+            np.testing.assert_array_equal(ref[1:7], np.zeros(6, dtype=np.float32))
+
+    def test_scripted_baseline_bit_for_bit_vs_parent_commit(self):
+        """Verify bit-for-bit floating-point equality against parent commit implementation when git parent is accessible."""
+        import subprocess
+        import importlib.util
+        try:
+            parent_code = subprocess.check_output(
+                ["git", "show", "cfe6451:src/g1_ping_pong_lab/continuous_feeds.py"],
+                text=True, stderr=subprocess.DEVNULL
+            )
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            pytest.skip("Parent commit cfe6451 not accessible in this environment")
+
+        spec = importlib.util.spec_from_loader("continuous_feeds_parent", loader=None)
+        parent_mod = importlib.util.module_from_spec(spec)
+        parent_mod.__package__ = "g1_ping_pong_lab"
+        exec(parent_code, parent_mod.__dict__)
+
+        scene = Path("assets/scene.xml")
+        wbc = Path("assets/wbc")
+
+        _, frames_parent = parent_mod.run_continuous(scene, wbc, feeds=2, interval=3.0, tail=1.2, controller_mode="scripted")
+        _, frames_curr = run_continuous(scene, wbc, feeds=2, interval=3.0, tail=1.2, controller_mode="scripted")
+
+        assert len(frames_parent) == len(frames_curr)
+        for fp, fc in zip(frames_parent, frames_curr):
+            for key in ["qpos", "qvel", "ctrl", "reference39", "raw7", "raw_wbc29", "observation132"]:
+                np.testing.assert_array_equal(fp[key], fc[key])
+
+    def test_audit_stance_drift_exported_fields_match_recovery_metrics(self):
+        """Verify that audit_stance_drift exports entry, exit, and reduction fields matching recovery_metrics."""
+        repo_root = Path(__file__).resolve().parents[1]
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from tools.audit_stance_drift import audit_stance_drift
+
+        summary = audit_stance_drift(
+            Path("assets/scene.xml"), Path("assets/wbc"),
+            feeds=2, controller_mode="stance-recovery"
+        )
+        assert len(summary["feed_diagnostics"]) == 2
+        assert len(summary["recovery_phase_metrics"]) == 2
+        for diag, rm in zip(summary["feed_diagnostics"], summary["recovery_phase_metrics"]):
+            assert diag["recovery_entry_yaw_err_deg"] == rm["recovery_entry_yaw_err_deg"]
+            assert diag["recovery_exit_yaw_err_deg"] == rm["recovery_exit_yaw_err_deg"]
+            assert diag["absolute_yaw_error_reduction_deg"] == rm["absolute_yaw_error_reduction_deg"]
+            assert diag["signed_yaw_correction_deg"] == rm["signed_yaw_correction_deg"]
+
+    def test_benchmark_condition_separation_and_structured_metrics(self):
+        """Verify that benchmark_stance_recovery separates velocity conditions and reports primary recovery metrics."""
+        repo_root = Path(__file__).resolve().parents[1]
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from tools.benchmark_stance_recovery import benchmark_stance_recovery
+
+        trials = [("nominal", None), ("fast_feed", [-1.9, 0.0, 0.52])]
+        out = benchmark_stance_recovery(
+            Path("assets/scene.xml"), Path("assets/wbc"),
+            feed_counts=[1], trials=trials, repetitions=1
+        )
+        assert "condition_aggregates" in out
+        assert "results" in out
+        # Verify conditions are separated and not pooled
+        conditions = {agg["condition"] for agg in out["condition_aggregates"]}
+        assert conditions == {"nominal", "fast_feed"}
+        for agg in out["condition_aggregates"]:
+            assert "mean_final_recovery_exit_yaw_err_deg" in agg
+            assert "mean_recovery_abs_reduction_deg" in agg
+            assert "mean_session_final_yaw_deg" in agg
+            assert "mean_session_pelvis_drift_cm" in agg
+            assert agg["repetitions"] == 1
+        for res in out["results"]:
+            assert "session_pelvis_drift_cm" in res
+            assert "session_final_yaw_deg" in res
+            assert "mean_recovery_entry_yaw_err_deg" in res
+            assert "mean_recovery_exit_yaw_err_deg" in res
