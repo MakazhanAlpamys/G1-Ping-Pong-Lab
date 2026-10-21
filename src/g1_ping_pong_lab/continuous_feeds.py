@@ -14,6 +14,7 @@ import numpy as np
 from .runtime import Controller, FORCE_CAPS, stroke_at, sha
 from .scoring import ReturnAttempt, TableGeometry
 from .interception import PredictiveTimingInterceptor, StanceRecoveryController
+from .diagnostics import StanceTracker
 
 
 def relative_feed_state(initial_root, current_root):
@@ -34,7 +35,8 @@ def relative_feed_state(initial_root, current_root):
 
 
 def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relative_feeder=False,
-                   controller_mode="scripted", custom_velocity=None, stance_recovery=False):
+                   controller_mode="scripted", custom_velocity=None, stance_recovery=False,
+                   diagnostics: StanceTracker | None = None):
     if not 1 <= feeds <= 32 or interval < 2. or tail < 1.2:
         raise ValueError("Use 1..32 feeds, interval >=2 seconds and tail >=1.2 seconds")
     for duration in (interval, tail):
@@ -58,7 +60,7 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     mujoco.mj_forward(model, data)
     interceptor_mode = "predictive-timing" if controller_mode in ("stance-recovery", "predictive-timing-with-recovery") else controller_mode
     interceptor = PredictiveTimingInterceptor(model, controller, mode=interceptor_mode) if interceptor_mode != "scripted" else None
-    recovery_controller = StanceRecoveryController() if (stance_recovery or controller_mode in ("stance-recovery", "predictive-timing-with-recovery")) else None
+    recovery_controller = StanceRecoveryController(model=model) if (stance_recovery or controller_mode in ("stance-recovery", "predictive-timing-with-recovery")) else None
     initial_root=data.qpos[:7].copy()
     base_reference = controller.reference(data)
     ball_q = int(model.joint("ball/ball_freejoint").qposadr[0])
@@ -84,10 +86,14 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     frames=[];reports=[];boundaries=[]
     support_steps=nonfoot_steps=0;cap_ratio=0.;fallen_any=False;failure=None
     scorer=None;feed_id=-1;feed_started=0.
+    if diagnostics is not None:
+        diagnostics.start_feed(0, data, 0.0)
     for step in range(nsteps):
         if step%feed_stride==0 and step//feed_stride<feeds:
             if scorer is not None:
                 reports.append({"feed_id":feed_id,"launched_at":feed_started,"ball_outcome":scorer.finish()})
+                if diagnostics is not None:
+                    diagnostics.finish_feed(data, data.time)
             feed_id+=1;feed_started=step*model.opt.timestep
             before=data.qpos[:ball_q].copy();history_before=controller.previous.copy()
             if robot_relative_feeder:
@@ -105,6 +111,8 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
                 interceptor.reset_feed(feed_id, data)
             if recovery_controller is not None:
                 recovery_controller.reset_feed(feed_id)
+            if diagnostics is not None and feed_id > 0:
+                diagnostics.start_feed(feed_id, data, feed_started)
             boundaries.append({"feed_id":feed_id,"time":feed_started,
                 "launch_position":position.tolist(),"launch_velocity":velocity.tolist(),
                 "robot_qpos_change_at_feed":float(np.max(abs(data.qpos[:ball_q]-before))),
@@ -120,6 +128,8 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
             ref[10:]=np.clip(ref[10:],controller.ranges[:,0],controller.ranges[:,1])
             raw29,obs=controller.apply(data,ref)
         mujoco.mj_step(model,data)
+        if diagnostics is not None:
+            diagnostics.observe_step(data, data.time)
         if (not np.isfinite(data.qpos).all() or not np.isfinite(data.qvel).all()
             or abs(data.time-(step+1)*model.opt.timestep)>1e-7
             or any(data.warning[k].number for k in (mujoco.mjtWarning.mjWARN_BADQPOS,
@@ -146,6 +156,8 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
                 "qpos":data.qpos.copy(),"qvel":data.qvel.copy(),"ctrl":data.ctrl.copy(),
                 "raw7":raw7.copy(),"reference39":ref.copy(),"raw_wbc29":raw29.copy(),"observation132":obs.copy()})
     reports.append({"feed_id":feed_id,"launched_at":feed_started,"ball_outcome":scorer.finish(aborted=failure is not None)})
+    if diagnostics is not None:
+        diagnostics.finish_feed(data, data.time)
     accepted=bool(not fallen_any and not support_steps and not nonfoot_steps and cap_ratio<=1.000001 and failure is None and step+1==nsteps)
     report={"protocol":"g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
         "description":"One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
@@ -157,6 +169,8 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
         "fallen":fallen_any,"external_support_substeps":support_steps,"nonfoot_ground_substeps":nonfoot_steps,
         "maximum_force_cap_ratio":cap_ratio,"failure":failure,"full_session_stance_accepted":accepted,
         "accepted_returns":sum(bool(r['ball_outcome']['success']) for r in reports) if accepted else 0}
+    if diagnostics is not None:
+        report["stance_diagnostics"]=[s.to_dict() for s in diagnostics.summaries]
     return report,frames
 
 
@@ -169,12 +183,15 @@ def main():
     parser.add_argument('--tail',type=float,default=12.)
     parser.add_argument('--output',type=Path,default=Path('outputs/continuous-feeds'))
     parser.add_argument('--robot-relative-feeder',action='store_true',help='Aim new feeds in current simulator pelvis XY/yaw frame; no postlaunch edits')
-    parser.add_argument('--controller',choices=['scripted','predictive-timing'],default='scripted',help='Arm trajectory controller strategy (default: scripted)')
+    parser.add_argument('--controller',choices=['scripted','predictive-timing','stance-recovery'],default='scripted',help='Arm trajectory controller strategy (default: scripted)')
+    parser.add_argument('--diagnostics',action='store_true',help='Record detailed stance drift and contact diagnostics')
     parser.add_argument('--velocity',nargs=3,type=float,default=None,help='Custom feed velocity [vx, vy, vz] for perturbation testing')
     args=parser.parse_args();args.output.mkdir(parents=True,exist_ok=False)
+    diag = StanceTracker(mujoco.MjModel.from_xml_path(str(args.scene))) if args.diagnostics else None
     report,frames=run_continuous(args.scene,args.wbc,feeds=args.feeds,interval=args.interval,tail=args.tail,
                                robot_relative_feeder=args.robot_relative_feeder,
-                               controller_mode=args.controller,custom_velocity=args.velocity)
+                               controller_mode=args.controller,custom_velocity=args.velocity,
+                               diagnostics=diag)
     np.savez_compressed(args.output/'session.npz',**{k:np.array([f[k]for f in frames])for k in frames[0]})
     report.update(scene_sha256=sha(args.scene),source_sha256=sha(__file__),trajectory_sha256=sha(args.output/'session.npz'))
     (args.output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
