@@ -107,3 +107,36 @@ def test_scripted_arm_is_independent_of_noisy_delayed_ball_measurements():
     assert report["ball_observations"]["ticks_without_measurement"] == 3
     for a, b in zip(exact, measured):
         np.testing.assert_array_equal(a["qpos"], b["qpos"])
+
+
+@pytest.mark.parametrize("mode,recovery_flag", [
+    ("stance-recovery", False),
+    ("predictive-timing-with-recovery", False),
+    ("predictive-timing", True),
+])
+def test_clean_sensor_preserves_stance_recovery_trajectory(mode, recovery_flag):
+    """Recovery must remain active when timing consumes measured ball states."""
+    kwargs = dict(feeds=1, tail=3., controller_mode=mode, stance_recovery=recovery_flag)
+    _, exact = run_continuous(ROOT / "assets/scene.xml", ROOT / "assets/wbc", **kwargs)
+    report, measured = run_continuous(ROOT / "assets/scene.xml", ROOT / "assets/wbc",
+                                     observation_config=ObservationConfig(), **kwargs)
+    assert report["accepted_returns"] == 1
+    assert report["ball_observations"]["samples_captured"] == 150
+    assert len(exact) == len(measured) == 150
+    assert any(np.linalg.norm(f["reference39"][4:7]) > .01 for f in measured)
+    for a, b in zip(exact, measured):
+        for key in a:
+            np.testing.assert_array_equal(a[key], b[key])
+
+
+def test_recovery_mode_keeps_delayed_startup_causal():
+    report, frames = run_continuous(ROOT / "assets/scene.xml", ROOT / "assets/wbc",
+        feeds=1, tail=3., controller_mode="stance-recovery", diagnostics=True,
+        observation_config=ObservationConfig(latency_s=.08, timestamp_aware=True))
+    assert report["full_session_stance_accepted"] is True
+    assert report["ball_observations"]["ticks_without_measurement"] == 4
+    assert len(report["recovery_metrics"]) == 1
+    assert all(row["captured_at"] is None for row in report["observation_trace"][:4])
+    for frame in frames[:4]:
+        np.testing.assert_array_equal(frame["raw7"], np.zeros(7))
+    assert any(np.linalg.norm(f["reference39"][4:7]) > .01 for f in frames)

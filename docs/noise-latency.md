@@ -74,6 +74,28 @@ including any phase reversals under changing predictions; reversals are measured
 rather than silently corrected. Clean-sensor regression tests compare complete
 recorded native trajectories against the original execution.
 
+## Combining sensing with stance recovery
+
+The observation channel also supports Pernav's optional stance recovery from
+[PR #3](https://github.com/MakazhanAlpamys/G1-Ping-Pong-Lab/pull/3):
+
+```python
+from g1_ping_pong_lab.ball_observations import ObservationConfig
+from g1_ping_pong_lab.continuous_feeds import run_continuous
+
+report, frames = run_continuous(
+    "assets/scene.xml", "assets/wbc", feeds=4,
+    controller_mode="stance-recovery", diagnostics=True,
+    observation_config=ObservationConfig(latency_s=.04, timestamp_aware=True),
+)
+```
+
+Recovery changes the WBC references during the existing idle recovery window;
+ball timing still uses delivered measurements and holds READY before the first
+sample arrives. A clean observation channel must preserve the corresponding
+recovery trajectory bitwise. The published sensing matrices below keep recovery
+disabled; combining the modules is not a new measured endurance result.
+
 ## Evidence
 
 Each trial writes `report.json` with the full physical return event trace, stance

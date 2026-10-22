@@ -2,6 +2,7 @@
 from .predictor import BallTrajectoryPredictor, PredictionResult
 from .planner import DescendingInterceptionPlanner, InterceptionPlan
 from .controller import PredictiveTimingInterceptor
+from .stance_recovery import StanceRecoveryController
 
 __all__ = [
     "BallTrajectoryPredictor",
@@ -9,4 +10,5 @@ __all__ = [
     "DescendingInterceptionPlanner",
     "InterceptionPlan",
     "PredictiveTimingInterceptor",
+    "StanceRecoveryController",
 ]

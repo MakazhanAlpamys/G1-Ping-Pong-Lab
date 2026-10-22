@@ -4,6 +4,8 @@ Only the ball is replaced at each feed boundary. Robot state and WBC raw-action
 history persist. This is a practice feeder, not a same-ball rally or an opponent.
 Every scored return requires actual table/racket contacts and net clearance.
 """
+from __future__ import annotations
+
 import argparse
 import json
 from pathlib import Path
@@ -13,7 +15,8 @@ import numpy as np
 
 from .runtime import Controller, FORCE_CAPS, stroke_at, sha
 from .scoring import ReturnAttempt, TableGeometry
-from .interception import PredictiveTimingInterceptor
+from .interception import PredictiveTimingInterceptor, StanceRecoveryController
+from .diagnostics import StanceTracker
 
 
 def relative_feed_state(initial_root, current_root):
@@ -28,13 +31,43 @@ def relative_feed_state(initial_root, current_root):
     angle=yaw(current_root)-yaw(initial_root)
     c,s=np.cos(angle),np.sin(angle)
     rotation=np.array([[c,-s],[s,c]])
-    xy=np.asarray(current_root[:2])+rotation@(np.array([-.65,-.25])-initial_root[:2])
-    velocity=rotation@np.array([-1.8,0.])
-    return np.r_[xy,1.],np.r_[velocity,.5]
+    initial_xy=initial_root[:2]
+    current_xy=current_root[:2]
+    feed_pos=np.array([-.65,-.25])
+    feed_vel=np.array([-1.8,0.])
+    world_pos=current_xy+rotation@(feed_pos-initial_xy)
+    world_vel=rotation@feed_vel
+    return np.r_[world_pos,1.],np.r_[world_vel,.5]
+
+
+def compute_recovery_phase_metrics(phase_records: list[dict]) -> list[dict]:
+    """Compute per-feed entry/exit recovery metrics from structured phase snapshots."""
+    metrics = []
+    feed_ids = sorted(list({p["feed_id"] for p in phase_records}))
+    for fid in feed_ids:
+        entry = next((p for p in phase_records if p["feed_id"] == fid and p["phase"] == "recovery_entry"), None)
+        exit_p = next((p for p in phase_records if p["feed_id"] == fid and p["phase"] == "recovery_exit"), None)
+        pre = next((p for p in phase_records if p["feed_id"] == fid and p["phase"] == "pre_stroke"), None)
+        if entry is not None and exit_p is not None:
+            entry_err = entry["torso_yaw_err_deg"]
+            exit_err = exit_p["torso_yaw_err_deg"]
+            metrics.append({
+                "feed_id": fid,
+                "pre_stroke_torso_yaw_deg": pre["torso_yaw_deg"] if pre else None,
+                "recovery_entry_yaw_err_deg": entry_err,
+                "recovery_exit_yaw_err_deg": exit_err,
+                "absolute_yaw_error_reduction_deg": round(abs(entry_err) - abs(exit_err), 3),
+                "signed_yaw_correction_deg": round(exit_p["torso_yaw_deg"] - entry["torso_yaw_deg"], 3),
+                "pelvis_x_displacement_during_recovery_cm": round((exit_p["pelvis_pos"][0] - entry["pelvis_pos"][0]) * 100.0, 3),
+                "torso_x_displacement_during_recovery_cm": round((exit_p["torso_pos"][0] - entry["torso_pos"][0]) * 100.0, 3),
+            })
+    return metrics
 
 
 def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relative_feeder=False,
-                   controller_mode="scripted", custom_velocity=None, observation_config=None):
+                   controller_mode="scripted", custom_velocity=None, observation_config=None,
+                   stance_recovery=False,
+                   diagnostics: StanceTracker | bool | None = None):
     if not 1 <= feeds <= 32 or interval < 2. or tail < 1.2:
         raise ValueError("Use 1..32 feeds, interval >=2 seconds and tail >=1.2 seconds")
     for duration in (interval, tail):
@@ -61,11 +94,22 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     data = mujoco.MjData(model)
     mujoco.mj_resetDataKeyframe(model, data, 0)  # Once for the entire session.
     mujoco.mj_forward(model, data)
+    # Bind diagnostic tracker to active simulation model
+    if diagnostics is True:
+        diag = StanceTracker(model)
+    elif isinstance(diagnostics, StanceTracker):
+        diagnostics.bind_model(model)
+        diag = diagnostics
+    else:
+        diag = None
+
+    interceptor_mode = "predictive-timing" if controller_mode in ("stance-recovery", "predictive-timing-with-recovery") else controller_mode
     if observation_config is not None:
-        interceptor = ObservedTimingInterceptor(model, controller, mode=controller_mode,
+        interceptor = ObservedTimingInterceptor(model, controller, mode=interceptor_mode,
             observation_stream=BallObservationStream(observation_config))
     else:
-        interceptor = PredictiveTimingInterceptor(model, controller, mode=controller_mode) if controller_mode != "scripted" else None
+        interceptor = PredictiveTimingInterceptor(model, controller, mode=interceptor_mode) if interceptor_mode != "scripted" else None
+    recovery_controller = StanceRecoveryController(model=model) if (stance_recovery or controller_mode in ("stance-recovery", "predictive-timing-with-recovery")) else None
     initial_root=data.qpos[:7].copy()
     base_reference = controller.reference(data)
     ball_q = int(model.joint("ball/ball_freejoint").qposadr[0])
@@ -90,12 +134,22 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     feed_stride=round(interval/model.opt.timestep)
     frames=[];reports=[];boundaries=[]
     support_steps=nonfoot_steps=0;cap_ratio=0.;fallen_any=False;failure=None
-    scorer=None;feed_id=-1;feed_started=0.
+    scorer=None;feed_id=-1;feed_started=0.;feed_start_step=0
+
+    rec_entry_offset = round(1.05 / model.opt.timestep)
+    rec_exit_offset = round(2.95 / model.opt.timestep)
+
+    if diag is not None:
+        diag.start_feed(0, data, 0.0)
+        diag.sample_phase(data, "pre_stroke", 0, 0.0)
+
     for step in range(nsteps):
         if step%feed_stride==0 and step//feed_stride<feeds:
             if scorer is not None:
                 reports.append({"feed_id":feed_id,"launched_at":feed_started,"ball_outcome":scorer.finish()})
-            feed_id+=1;feed_started=step*model.opt.timestep
+                if diag is not None:
+                    diag.finish_feed(data, data.time)
+            feed_id+=1;feed_started=step*model.opt.timestep;feed_start_step=step
             before=data.qpos[:ball_q].copy();history_before=controller.previous.copy()
             if robot_relative_feeder:
                 position, velocity = relative_feed_state(initial_root, data.qpos[:7])
@@ -110,19 +164,37 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
             mujoco.mj_forward(model,data)
             if interceptor is not None:
                 interceptor.reset_feed(feed_id, data)
+            if recovery_controller is not None:
+                recovery_controller.reset_feed(feed_id)
+            if diag is not None and feed_id > 0:
+                diag.start_feed(feed_id, data, feed_started)
+                diag.sample_phase(data, "pre_stroke", feed_id, feed_started)
             boundaries.append({"feed_id":feed_id,"time":feed_started,
                 "launch_position":position.tolist(),"launch_velocity":velocity.tolist(),
                 "robot_qpos_change_at_feed":float(np.max(abs(data.qpos[:ball_q]-before))),
                 "wbc_history_change_at_feed":float(np.max(abs(controller.previous-history_before)))})
             scorer=ReturnAttempt(geometry)
+
+        # Capture deterministic phase telemetry
+        if diag is not None:
+            step_in_feed = step - feed_start_step
+            if step_in_feed == rec_entry_offset:
+                diag.sample_phase(data, "recovery_entry", feed_id, data.time)
+            elif step_in_feed == rec_exit_offset:
+                diag.sample_phase(data, "recovery_exit", feed_id, data.time)
+
         if step%80==0:
             relative=max(0.,data.time-feed_started)
             ref=base_reference.copy()
             raw7=interceptor.step(data, relative) if interceptor is not None else stroke_at(relative)
             ref[10+controller.arm]+=.7*raw7
+            if recovery_controller is not None:
+                recovery_controller.apply_recovery(data, ref, relative)
             ref[10:]=np.clip(ref[10:],controller.ranges[:,0],controller.ranges[:,1])
             raw29,obs=controller.apply(data,ref)
         mujoco.mj_step(model,data)
+        if diag is not None:
+            diag.observe_step(data, data.time)
         if (not np.isfinite(data.qpos).all() or not np.isfinite(data.qvel).all()
             or abs(data.time-(step+1)*model.opt.timestep)>1e-7
             or any(data.warning[k].number for k in (mujoco.mjtWarning.mjWARN_BADQPOS,
@@ -149,7 +221,14 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
                 "qpos":data.qpos.copy(),"qvel":data.qvel.copy(),"ctrl":data.ctrl.copy(),
                 "raw7":raw7.copy(),"reference39":ref.copy(),"raw_wbc29":raw29.copy(),"observation132":obs.copy()})
     reports.append({"feed_id":feed_id,"launched_at":feed_started,"ball_outcome":scorer.finish(aborted=failure is not None)})
+    if diag is not None:
+        diag.finish_feed(data, data.time)
     accepted=bool(not fallen_any and not support_steps and not nonfoot_steps and cap_ratio<=1.000001 and failure is None and step+1==nsteps)
+
+    valid_returns = sum(bool(r['ball_outcome']['success']) for r in reports)
+    racket_contacts = sum(bool(r['ball_outcome'].get('contacted', False)) for r in reports)
+    attempted_feeds = len(reports)
+
     report={"protocol":"g1-ping-pong-lab.native-cpu-continuous-feeder-v1",
         "description":"One continuously simulated robot. Only the ball is replaced at scheduled feed boundaries. These are separate fixed feeds, not a continuous same-ball rally.",
         "controller_mode":controller_mode,
@@ -159,7 +238,16 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
         "robot_resets_after_start":0,"wbc_history_resets_after_start":0,"ball_replacements_after_start":len(boundaries)-1,
         "fallen":fallen_any,"external_support_substeps":support_steps,"nonfoot_ground_substeps":nonfoot_steps,
         "maximum_force_cap_ratio":cap_ratio,"failure":failure,"full_session_stance_accepted":accepted,
-        "accepted_returns":sum(bool(r['ball_outcome']['success']) for r in reports) if accepted else 0}
+        "valid_returns":valid_returns,
+        "racket_contacts":racket_contacts,
+        "return_rate":(valid_returns / attempted_feeds) if attempted_feeds > 0 else 0.0,
+        "contact_rate":(racket_contacts / attempted_feeds) if attempted_feeds > 0 else 0.0,
+        "accepted_returns":valid_returns if accepted else 0,
+        "accepted_valid_returns":valid_returns if accepted else 0}
+    if diag is not None:
+        report["stance_diagnostics"]=[s.to_dict() for s in diag.summaries]
+        report["phase_records"]=diag.phase_records
+        report["recovery_metrics"]=compute_recovery_phase_metrics(diag.phase_records)
     if observation_config is not None:
         report["ball_observations"] = interceptor.observation_stream.summary()
         report["observation_trace"] = interceptor.observation_stream.trace
@@ -175,16 +263,18 @@ def main():
     parser.add_argument('--tail',type=float,default=12.)
     parser.add_argument('--output',type=Path,default=Path('outputs/continuous-feeds'))
     parser.add_argument('--robot-relative-feeder',action='store_true',help='Aim new feeds in current simulator pelvis XY/yaw frame; no postlaunch edits')
-    parser.add_argument('--controller',choices=['scripted','predictive-timing'],default='scripted',help='Arm trajectory controller strategy (default: scripted)')
+    parser.add_argument('--controller',choices=['scripted','predictive-timing','stance-recovery'],default='scripted',help='Arm trajectory controller strategy (default: scripted)')
+    parser.add_argument('--diagnostics',action='store_true',help='Record detailed stance drift and contact diagnostics')
     parser.add_argument('--velocity',nargs=3,type=float,default=None,help='Custom feed velocity [vx, vy, vz] for perturbation testing')
     args=parser.parse_args();args.output.mkdir(parents=True,exist_ok=False)
     report,frames=run_continuous(args.scene,args.wbc,feeds=args.feeds,interval=args.interval,tail=args.tail,
                                robot_relative_feeder=args.robot_relative_feeder,
-                               controller_mode=args.controller,custom_velocity=args.velocity)
+                               controller_mode=args.controller,custom_velocity=args.velocity,
+                               diagnostics=args.diagnostics)
     np.savez_compressed(args.output/'session.npz',**{k:np.array([f[k]for f in frames])for k in frames[0]})
     report.update(scene_sha256=sha(args.scene),source_sha256=sha(__file__),trajectory_sha256=sha(args.output/'session.npz'))
     (args.output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
-    print(json.dumps({k:report[k] for k in ['accepted_returns','full_session_stance_accepted','fallen','actual_seconds']}
+    print(json.dumps({k:report[k] for k in ['valid_returns','racket_contacts','accepted_returns','full_session_stance_accepted','fallen','actual_seconds']}
                      |{'feed_results':[r['ball_outcome']['reason'] for r in report['feeds']]}),flush=True)
 
 
