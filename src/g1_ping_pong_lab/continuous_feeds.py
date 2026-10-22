@@ -65,7 +65,8 @@ def compute_recovery_phase_metrics(phase_records: list[dict]) -> list[dict]:
 
 
 def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relative_feeder=False,
-                   controller_mode="scripted", custom_velocity=None, stance_recovery=False,
+                   controller_mode="scripted", custom_velocity=None, observation_config=None,
+                   stance_recovery=False,
                    diagnostics: StanceTracker | bool | None = None):
     if not 1 <= feeds <= 32 or interval < 2. or tail < 1.2:
         raise ValueError("Use 1..32 feeds, interval >=2 seconds and tail >=1.2 seconds")
@@ -81,6 +82,11 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     if controller_mode != "scripted" and robot_relative_feeder:
         raise ValueError("predictive timing uses a fixed world-frame interception plane; "
                          "it is not supported with robot_relative_feeder")
+    if observation_config is not None:
+        from .ball_observations import BallObservationStream, ObservationConfig
+        from .observed_interception import ObservedTimingInterceptor
+        if not isinstance(observation_config, ObservationConfig):
+            raise ValueError("observation_config must be an ObservationConfig")
     model = mujoco.MjModel.from_xml_path(str(scene))
     if abs(model.opt.timestep-.00025) > 1e-12 or model.nmocap or model.neq:
         raise ValueError("Native .25 ms free robot and no mocap/equality required")
@@ -88,7 +94,6 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
     data = mujoco.MjData(model)
     mujoco.mj_resetDataKeyframe(model, data, 0)  # Once for the entire session.
     mujoco.mj_forward(model, data)
-
     # Bind diagnostic tracker to active simulation model
     if diagnostics is True:
         diag = StanceTracker(model)
@@ -99,7 +104,11 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
         diag = None
 
     interceptor_mode = "predictive-timing" if controller_mode in ("stance-recovery", "predictive-timing-with-recovery") else controller_mode
-    interceptor = PredictiveTimingInterceptor(model, controller, mode=interceptor_mode) if interceptor_mode != "scripted" else None
+    if observation_config is not None:
+        interceptor = ObservedTimingInterceptor(model, controller, mode=interceptor_mode,
+            observation_stream=BallObservationStream(observation_config))
+    else:
+        interceptor = PredictiveTimingInterceptor(model, controller, mode=interceptor_mode) if interceptor_mode != "scripted" else None
     recovery_controller = StanceRecoveryController(model=model) if (stance_recovery or controller_mode in ("stance-recovery", "predictive-timing-with-recovery")) else None
     initial_root=data.qpos[:7].copy()
     base_reference = controller.reference(data)
@@ -239,6 +248,9 @@ def run_continuous(scene, assets, *, feeds=4, interval=3., tail=12., robot_relat
         report["stance_diagnostics"]=[s.to_dict() for s in diag.summaries]
         report["phase_records"]=diag.phase_records
         report["recovery_metrics"]=compute_recovery_phase_metrics(diag.phase_records)
+    if observation_config is not None:
+        report["ball_observations"] = interceptor.observation_stream.summary()
+        report["observation_trace"] = interceptor.observation_stream.trace
     return report,frames
 
 

@@ -5,6 +5,9 @@ real-time view of **two scheduled feeds to the same continuously simulated
 robot**. The feeder replaces the ball at 3 seconds; robot state and balance
 controller history are preserved. This is a practice feeder, not a same-ball rally.
 
+For the separate predictive-timing sensing experiment, see the
+[ball measurement noise and latency benchmark](noise-latency.md).
+
 ## Install and check
 
 The reference environment is Python 3.12, Ubuntu / WSL, MuJoCo 3.11.0 and CPU
